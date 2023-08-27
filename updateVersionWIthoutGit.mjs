@@ -10,8 +10,11 @@ const version = parse(packageJsonObject.version);
 const versionUpdateType = process.argv[2];
 if (versionUpdateType == 'major') {
 	version.major++;
+	version.minor = 0;
+	version.patch = 0;
 } else if (versionUpdateType == 'minor') {
 	version.minor++;
+	version.patch = 0;
 } else if (versionUpdateType == 'patch') {
 	version.patch++;
 } else {
