@@ -157,7 +157,7 @@ export function createEditor(level: Level): Editor {
 		description.innerHTML = `surfaceAPL is a custom editor for Appel, written in Typescript.
 Any exported levels are owned by the user.
 
-<span style="opacity:0.5">v${APP_VERSION}
+<span style="opacity:0.5">v${APP_VERSION} (${COMMIT_HASH})
 Please do not copy or redistribute without permission</span>`.split("\n\n").map(t => `<p>${t.split("\n").join("<br>")}</p>`).join("");
 
 		content.appendChild(title);
