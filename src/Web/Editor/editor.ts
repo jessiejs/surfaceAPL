@@ -13,10 +13,8 @@ import {
 	indexToStandardCoords,
 	standardCoordsToIndex,
 } from '../../SaveCodes/coords';
-import transforms from './RenderData/transforms.json' assert { type: 'json' };
 import copy from '../IO/copy';
-import createDialog from '../IO/dialog';
-import logoURL from '../../Art/Branding/Wordmark.svg';
+import about from './about';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -140,29 +138,7 @@ export function createEditor(level: Level): Editor {
 	const aboutButton = document.createElement('a');
 	aboutButton.href = '#about';
 	aboutButton.addEventListener('click', () => {
-		const { content } = createDialog('About', {
-			buttons: [
-				{
-					text: 'Close',
-					close:true
-				}
-			]
-		});
-
-		const title = document.createElement('img');
-		title.src = logoURL;
-		title.alt = 'surfaceAPL';
-		title.height = 40;
-
-		const description = document.createElement('p');
-		description.innerHTML = `surfaceAPL is a custom editor for Appel, written in Typescript.
-Any exported levels are owned by the user.
-
-<span style="opacity:0.5">v${APP_VERSION} (${COMMIT_HASH})
-Please do not copy or redistribute without permission</span>`.split("\n\n").map(t => `<p>${t.split("\n").join("<br>")}</p>`).join("");
-
-		content.appendChild(title);
-		content.appendChild(description);
+		about();
 	});
 	aboutButton.textContent = 'About';
 

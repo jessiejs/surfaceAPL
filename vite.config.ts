@@ -1,5 +1,5 @@
-import Unfonts from 'unplugin-fonts/vite'
 import { exec } from 'child_process';
+import { version } from 'os';
 
 const gitProc = exec(`git rev-parse HEAD`);
 
@@ -22,5 +22,8 @@ export default {
 	define: {
 		APP_VERSION: JSON.stringify(process.env.npm_package_version),
 		COMMIT_HASH: JSON.stringify(shortHash),
+		BUILD_TIME: JSON.stringify(new Date().getTime()),
+		OS_INFO: JSON.stringify(`${process.platform}/${process.arch} (${version()})`),
+		NODE_INFO: JSON.stringify(`Node ${process.version}`),
 	},
 }
