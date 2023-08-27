@@ -15,6 +15,7 @@ import {
 } from '../../SaveCodes/coords';
 import copy from '../IO/copy';
 import about from './about';
+import { showExportDialog } from './export';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -131,7 +132,7 @@ export function createEditor(level: Level): Editor {
 	const exportButton = document.createElement('a');
 	exportButton.href = '#export';
 	exportButton.addEventListener('click',async () => {
-		await copy('Download your level', mainLevelCodeToOpenCode(encodeLevel(level,{ compress: true, makeNonEditableByJS: false })));
+		showExportDialog(level);
 	});
 	exportButton.textContent = 'Export';
 
