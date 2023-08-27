@@ -1,4 +1,4 @@
-pnpm version patch
+node ./updateVersionWithoutGit.mjs patch
 gut commit
 git push
 ./publishPrivate
