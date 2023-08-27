@@ -20,7 +20,7 @@ export default function() {
 	description.innerHTML = `surfaceAPL is a custom editor for Appel, written in Typescript.
 Any exported levels are owned by the user.
 
-<span style="opacity:0.5;font-size:9px;">v${APP_VERSION} (${COMMIT_HASH})
+<span style="opacity:0.5;font-size:11px;">v${APP_VERSION} (${COMMIT_HASH})
 Built with ${OS_INFO} ${NODE_INFO}
 Please do not copy or redistribute without permission</span>`.split("\n\n").map(t => `<p>${t.split("\n").join("<br>")}</p>`).join("");
 
