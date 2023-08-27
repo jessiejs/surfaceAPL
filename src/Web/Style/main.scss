@@ -161,6 +161,7 @@ dialog {
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
+		align-items: flex-start;
 
 		> .error {
 			color: $error;

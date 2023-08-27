@@ -16,6 +16,7 @@ import {
 import transforms from './RenderData/transforms.json' assert { type: 'json' };
 import copy from '../IO/copy';
 import createDialog from '../IO/dialog';
+import logoURL from '../../Art/Branding/Wordmark.svg';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -148,10 +149,10 @@ export function createEditor(level: Level): Editor {
 			]
 		});
 
-		const title = document.createElement('h1');
-		title.textContent = `🍎 surfaceAPL`;
-		title.style.paddingBottom = '0';
-		title.style.marginBottom = '0';
+		const title = document.createElement('img');
+		title.src = logoURL;
+		title.alt = 'surfaceAPL';
+		title.height = 40;
 
 		const description = document.createElement('p');
 		description.innerHTML = `surfaceAPL is a custom editor for Appel, written in Typescript.
