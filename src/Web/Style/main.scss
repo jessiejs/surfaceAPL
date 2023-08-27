@@ -1,0 +1,388 @@
+@import 'https://fonts.googleapis.com/css?family=Inter:400,600,700';
+@import './color.scss';
+
+@mixin WidgetButtonHover {
+	background-color: $accent !important;
+}
+
+.selected-button {
+	@include WidgetButtonHover;
+}
+
+@mixin WidgetButton {
+	border-radius: 5px;
+	:not(.selected-button):not(img) {
+		background-color: $raise !important;
+	}
+	border: 0 !important;
+
+	transition: background-color 0.2s,
+		transform 0.2s cubic-bezier(0.68, -0.6, 0.32, 1.6), width 0.2s,
+		height 0.2s;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	> img {
+		height: 80%;
+		aspect-ratio: 1 / 1;
+		filter: brightness(0.5) contrast(2) brightness(2);
+		border-radius: 1px;
+	}
+
+	overflow: hidden;
+
+	aspect-ratio: 1 / 1;
+
+	padding: 0;
+}
+
+@mixin WidgetButtonActive {
+	transform: scale(0.9);
+}
+
+@font-face {
+	font-family: Renogare;
+	font-weight: bold;
+	src: url('/Fonts/Renogare/Renogare-Regular.otf') format('opentype');
+}
+
+@mixin BorderView {
+	background-color: $border;
+	gap: 1px;
+
+	> * {
+		background-color: $background;
+	}
+}
+
+@mixin VBox {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+
+	@include BorderView;
+}
+
+@mixin HBox {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	justify-content: flex-start;
+
+	@include BorderView;
+}
+
+.app {
+	position: fixed;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+
+	color: $text;
+
+	font-family: Inter;
+
+	@include VBox;
+}
+
+nav {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 12px;
+	gap: 15px;
+	font-size: 15px;
+	height: 49px;
+}
+
+nav > * {
+	padding: 0;
+	margin: 0;
+	color: white;
+	font-weight: bold;
+	text-decoration: none;
+	font-family: 'Inter';
+}
+
+main {
+	flex-grow: 1;
+}
+
+*:first-child {
+	margin-top: 0;
+}
+
+*:last-child {
+	margin-bottom: 0;
+}
+
+dialog[open] {
+	@include VBox;
+
+	> * {
+		background-color: $bg-1;
+	}
+}
+
+dialog {
+	margin-top: 150px;
+	border-radius: 15px;
+	box-shadow: 0 5px 10px $drop;
+	width: 50vw;
+	padding: 0;
+	border: 1px solid $border;
+	overflow: hidden;
+
+	font-family: Inter;
+
+	> header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px;
+
+		> h1 {
+			font-size: 18px;
+			padding-left: 8px;
+		}
+
+		> * {
+			margin: 0;
+		}
+	}
+
+	> .content {
+		padding: 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+
+		> .error {
+			color: $error;
+			font-size: 12px;
+		}
+	}
+
+	> .submit-bar {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-end;
+		padding: 10px;
+		gap: 5px;
+		background-color: $bg-2;
+		border-top: 1px solid $subtle-divider;
+	}
+
+	animation: dialogOpen 0.2s;
+}
+
+@keyframes dialogOpen {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes dialogBackdrop {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+dialog::backdrop {
+	animation: dialogBackdrop 0.2s;
+	background-color: $backdrop;
+	backdrop-filter: blur(4px);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: Renogare;
+}
+
+button {
+	padding: 5px 10px;
+	border-radius: 5px;
+	border: 1px solid $raisedBorder;
+	background-color: $raise;
+	font-family: Inter;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: $highlight;
+}
+
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+	background-color: color-mix(in srgb, transparent, $accent 30%);
+	border: 1px solid $accent;
+	outline: none;
+}
+
+label {
+	display: flex;
+	flex-direction: column;
+	font-family: Renogare;
+	gap: 5px;
+	font-size: 14px;
+
+	> input, > select {
+		font-size: 14px;
+		padding: 6px 12px;
+		border-radius: 5px;
+		font-family: Inter;
+		border: 1px solid $raisedBorder;
+		background-color: $drop;
+		width: 100%;
+	}
+	> textarea {
+		font-size: 14px;
+		padding: 6px 12px;
+		border-radius: 5px;
+		font-family: Inter;
+		border: 1px solid $raisedBorder;
+		background-color: $inset;
+		width: 100%;
+		resize: none;
+		height: 150px;
+	}
+}
+
+nav {
+	background-color: $bg-3 !important;
+}
+
+aside {
+	background-color: $bg-1 !important;
+
+	padding: 10px;
+
+	display: flex;
+	flex-direction: column;
+
+	gap: 5px;
+
+	> .row {
+		display: flex;
+		flex-direction: row;
+		gap: 5px;
+		flex-wrap: wrap;
+		padding: 5px;
+		border-radius: 10px;
+		background-color: $deep-inset;
+		width: 280px;
+
+		> .widget {
+			width: 50px;
+			height: 50px;
+		}
+
+		> .widget:has(button) {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			gap: 5px;
+
+			> button {
+				width: 100%;
+				height: 100%;
+
+				@include WidgetButton;
+
+				> img {
+					border-radius: 2.5px;
+				}
+			}
+
+			> button:hover {
+				@include WidgetButtonHover;
+			}
+
+			> button:active {
+				@include WidgetButtonActive;
+			}
+		}
+
+		.widget button:nth-child(2) {
+			> * {
+				transform: rotate(90deg);
+			}
+		}
+
+		.widget button:nth-child(4) {
+			> * {
+				transform: rotate(180deg);
+			}
+		}
+
+		.widget button:nth-child(3) {
+			> * {
+				transform: rotate(270deg);
+			}
+		}
+
+		// select only if we don't have children that are buttons
+		> .widget:not(:has(button)) {
+			@include WidgetButton;
+		}
+
+		> .widget:not(:has(button)):hover {
+			@include WidgetButtonHover;
+		}
+
+		> .widget:not(:has(button)):active {
+			@include WidgetButtonActive;
+		}
+	}
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.primary {
+	@include HBox;
+	width: 100%;
+	max-width: 100%;
+}
+
+#canvas {
+	flex-grow: 1;
+	width: 100%;
+	height: 100%;
+}
+
+dialog:has(.confetti) {
+	position: relative;
+
+	.confetti {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		width: 100%;
+		height: 100%;
+		background-color: transparent;
+		pointer-events: none;
+	}
+}

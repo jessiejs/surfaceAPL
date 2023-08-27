@@ -1,0 +1,20 @@
+$background: rgb(16,16,16);
+$text: rgb(255,255,255);
+$border: rgb(32,32,32);
+$raisedBorder: rgba(255,255,255,0.1);
+$raise: rgba(255,255,255,0.1);
+$accent: rgb(64,128,255);
+$error: rgb(255, 128, 128);
+$subtle-divider: rgba(255, 255, 255, 0.05);
+$drop: rgba(0,0,0,0.1);
+$backdrop: rgba(0, 0, 0, 0.6);
+$highlight: rgba(255, 255, 255, 0.2);
+$bg-1: rgb(24,24,24);
+$bg-2: rgb(30,30,30);
+$bg-3: rgb(32, 32, 32);
+$inset: rgba(0, 0, 0, 0.3);
+$deep-inset: rgba(0, 0, 0, 0.8);
+
+* {
+	color-scheme: dark;
+}
