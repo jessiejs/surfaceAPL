@@ -1,5 +1,5 @@
-import { exec } from 'child_process';
-import { version } from 'os';
+import { exec } from 'node:child_process';
+import { version } from 'node:os';
 
 const gitProc = exec(`git rev-parse HEAD`);
 
