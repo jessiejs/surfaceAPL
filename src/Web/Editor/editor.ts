@@ -405,7 +405,7 @@ Please do not copy or redistribute without permission</span>`.split("\n\n").map(
 						if (rotatables.includes(behaviour.placingID)) {
 							level.tiles[selectedIndex].rotation = behaviour.placingRotation;
 						} else {
-							level.tiles[selectedIndex].rotation = 0;
+							level.tiles[selectedIndex].rotation = 1;
 						}
 					}
 				}
