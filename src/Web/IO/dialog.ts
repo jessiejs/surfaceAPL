@@ -2,6 +2,7 @@ import shake from "../Effects/shake";
 import { keyDownHandlers, keyUpHandlers } from "./keyhandlers";
 import confetti from "canvas-confetti";
 import { pColors } from "./prd";
+import { Howl } from "howler";
 
 export default function(name:string, {buttons}:{buttons:{text:string,onclick?:()=>void,focus?:boolean,clickedText?:string,confetti?:boolean,close?:boolean,confettiFlag?:string}[]}):{
 	dialog:HTMLDialogElement,
