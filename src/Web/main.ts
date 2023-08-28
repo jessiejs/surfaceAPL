@@ -1,9 +1,13 @@
 import { waitFrame } from '../Promises/wait';
 import {
+	Level,
+	Tile,
+	encodeLevel,
 	loadLevel,
 	mainLevelCodeToOpenCode,
 	openCodeToMainLevelCode,
 } from '../SaveCodes/saveload';
+import { Direction, TileType } from '../SaveCodes/tiles';
 import { createEditor } from './Editor/editor';
 import { loadLevelURL } from './Editor/levelURL';
 import { keyDown, keyUp } from './IO/keyhandlers';
@@ -51,6 +55,7 @@ if (window.location.pathname == '/level') {
 	];
 
 	const type = await select('Level', [
+		{ text: 'New', isThereMore: false },
 		{ text: 'Custom', isThereMore: true },
 		...levelNames.map((l, i) => ({
 			text: `Level ${i + 1} - ${l}`,
@@ -64,6 +69,65 @@ if (window.location.pathname == '/level') {
 
 		console.log(prefix, index);
 		levelCode = mainLevelCodeToOpenCode(levelText.split('\n')[index]);
+	}
+
+	if (type == 'New') {
+		// create a blank level
+		const width = 192;
+		const height = 192;
+		const tiles:Tile[] = [];
+		const wall:number[] = [];
+
+		for (let y = 0; y < height; y++) {
+			wall.push(0,1);
+			for (let x = 0; x < width; x++) {
+				if (x == 1 && y == 3) {
+					tiles.push({
+						id: TileType.Player,
+						data: '',
+						rotation: Direction.Default,
+					});
+				} if (x == 8 && y == 3) {
+					tiles.push({
+						id: TileType.End1,
+						data: '',
+						rotation: Direction.Default,
+					});
+				} else if (x > 3 && x <= 6 && y == 3) {
+					tiles.push({
+						id: TileType.Spike2,
+						data: '',
+						rotation: Direction.Default,
+					});
+				} else if (y < 3) {
+					tiles.push({
+						id: TileType.Green1111,
+						data: '',
+						rotation: Direction.Default,
+					});
+				} else {
+					tiles.push({
+						id: TileType.Blank,
+						data: '',
+						rotation: Direction.Default,
+					});
+				}
+			}
+		}
+
+		const level:Level = {
+			width,
+			height,
+			tiles,
+			walls: wall,
+			hue: 0,
+			hue2: 0,
+		};
+
+		levelCode = mainLevelCodeToOpenCode(encodeLevel(level, {
+			compress: true,
+			makeNonEditableByJS: false,
+		}));
 	}
 
 	if (!levelCode) {
