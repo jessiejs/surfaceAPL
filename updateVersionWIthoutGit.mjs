@@ -31,12 +31,17 @@ const afterVersion = packageJsonObject.version;
 const webhook = process.env.SURFACEAPL_WEBHOOK;
 if (webhook) {
 	// send message
-	await fetch(webhook, {
+	const result = await fetch(webhook, {
 		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+		},
 		body: JSON.stringify({
 			content: `Updated from ${beforeVersion} to ${afterVersion}, update type ${versionUpdateType}`,
 		}),
-	})
+	}).then(rs => rs.text());
+
+	console.log(result);
 } else {
 	console.log(`No webhooks :raised_eyebrows:`);
 }
