@@ -5,6 +5,7 @@ import { parse } from 'semver';
 const packageJson = await readFile('package.json', 'utf-8');
 const packageJsonObject = JSON.parse(packageJson);
 
+const beforeVersion = packageJsonObject.version;
 const version = parse(packageJsonObject.version);
 // read args
 const versionUpdateType = process.argv[2];
@@ -24,3 +25,16 @@ if (versionUpdateType == 'major') {
 packageJsonObject.version = version.format();
 
 await writeFile('package.json', JSON.stringify(packageJsonObject, null, '\t'));
+const afterVersion = packageJsonObject.version;
+
+// post to a discord webhook
+const webhook = process.env.SURFACEAPL_WEBHOOK;
+if (webhook) {
+	// send message
+	await fetch(webhook, {
+		method: 'POST',
+		body: JSON.stringify({
+			content: `Updated from ${beforeVersion} to ${afterVersion}, update type ${versionUpdateType}`,
+		}),
+	})
+}
