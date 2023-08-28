@@ -175,6 +175,11 @@ dialog {
 		}
 	}
 
+	> .content:has(.settings-row) {
+		padding: 0;
+		gap: 0;
+	}
+
 	> .content:not(:has(.qr)) {
 		max-height: 300px;
 		overflow: hidden auto;
@@ -290,10 +295,21 @@ textarea {
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	padding: 10px 20px;
 
 	> input, select {
-		width: 50%;
+		max-width: 150px;
 	}
+
+	> input[type="checkbox"] {
+		width: min-content;
+	}
+	height: 50px;
+	border-top: 1px solid $raisedBorder;
+}
+
+.settings-row:nth-child(odd) {
+	background-color: $bg-2;
 }
 
 nav {

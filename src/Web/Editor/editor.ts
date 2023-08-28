@@ -27,7 +27,7 @@ import about from './about';
 import { showExportDialog } from './export';
 import prompt from '../IO/prompt';
 import { propertyPickerStyle } from '../config';
-import { SettingsManager, showSettingsWindow } from '../Settings/settings';
+import { SettingsManager, settings, showSettingsWindow } from '../Settings/settings';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -186,7 +186,10 @@ export function createEditor(level: Level): Editor {
 				(coreCamera.zoom - smoothCamera.zoom) * deltaTime * 5;
 
 			// move the camera with arrow keys
-			const speed = 400 / smoothCamera.zoom;
+			let speed = settings.getNumber<number>('camera.speed');
+			if (settings.getBoolean("camera.scaledMotion")) {
+				speed /= smoothCamera.zoom;
+			}
 			if (keysDown.includes('ArrowLeft') || keysDown.includes('KeyA')) {
 				coreCamera.pos[0] -= deltaTime * speed;
 			}

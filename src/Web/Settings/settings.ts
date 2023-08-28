@@ -1,16 +1,17 @@
 import createDialog from '../IO/dialog';
 
 export type SettingsData = {
-	kv:Record<SettingsKey,SettingsValue>;
+	kv: Record<SettingsKey, SettingsValue>;
 };
 
-export type SettingsValue = number | string | boolean
+export type SettingsValue = number | string | boolean;
 
-export type SettingsKey = 
-	"propertyPicker.style";
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed';
 
-const defaults:Record<SettingsKey,SettingsValue> = {
-	"propertyPicker.style": "classic"
+const defaults: Record<SettingsKey, SettingsValue> = {
+	'propertyPicker.style': 'classic',
+	'camera.scaledMotion': true,
+	'camera.speed': 400
 };
 
 type Immutable<T> = {
@@ -18,29 +19,32 @@ type Immutable<T> = {
 };
 
 export type SettingsManager = {
-	data: Immutable<SettingsData>;
 	setPref<T extends SettingsValue>(key: SettingsKey, value: T): void;
-	getPref<T extends SettingsValue>(key: SettingsKey): T;
-}
+	getNumber<T extends number>(key: SettingsKey): T;
+	getString<T extends string>(key: SettingsKey): T;
+	getBoolean<T extends boolean>(key: SettingsKey): T;
+};
 
 export const settings = getSettings();
 
-export function getSettings():SettingsManager {
-	let data:SettingsData = {
-		kv:{} as Record<SettingsKey,SettingsValue>
+export function getSettings(): SettingsManager {
+	let data: SettingsData = {
+		kv: {} as Record<SettingsKey, SettingsValue>,
 	};
 
 	try {
 		data = JSON.parse(localStorage.getItem('settings') || 'not parsable');
 	} catch {
 		console.info(`[settings]: db unininitialized, using defaults`);
-	};
+	}
 
-	console.group(`[settings]: checking defaults`)
+	console.group(`[settings]: checking defaults`);
 	for (const k in defaults) {
 		const key = k as SettingsKey;
 		if (data.kv[key] == undefined) {
-			console.info(`[settings]: pref ${key} not found, defaulting to ${defaults[key]}`);
+			console.info(
+				`[settings]: pref ${key} not found, defaulting to ${defaults[key]}`
+			);
 			data.kv[key] = defaults[key];
 		}
 	}
@@ -49,15 +53,36 @@ export function getSettings():SettingsManager {
 	console.log(`[settings]: saving`);
 	localStorage.setItem('settings', JSON.stringify(data));
 
+	function getPref<T extends SettingsValue>(key:SettingsKey) {
+		return data.kv[key] as T;
+	};
+
 	return {
-		data: data as Immutable<SettingsData>,
 		setPref(key, value) {
 			data.kv[key] = value;
 			console.log(`[settings]: saving ${value} to ${key}`);
 			localStorage.setItem('settings', JSON.stringify(data));
 		},
-		getPref(key) {
-			return data.kv[key] as any;
+		getNumber<T extends number>(key: SettingsKey) {
+			const value = getPref(key);
+			if (typeof value != 'number') {
+				throw `[settings]: ${key} is not a number`;
+			}
+			return value as T;
+		},
+		getString<T extends string>(key: SettingsKey) {
+			const value = getPref(key);
+			if (typeof value != 'string') {
+				throw `[settings]: ${key} is not a string`;
+			}
+			return value as T;
+		},
+		getBoolean<T extends boolean>(key: SettingsKey) {
+			const value = getPref(key);
+			if (typeof value != 'boolean') {
+				throw `[settings]: ${key} is not a boolean`;
+			}
+			return value as T;
 		}
 	};
 }
@@ -68,15 +93,27 @@ export function showSettingsWindow() {
 			{
 				text: 'Close',
 				close: true,
-			}
-		]
+			},
+		],
 	});
 
-	const options:([SettingsKey,string,'text'] | [SettingsKey,string,'number'] | [SettingsKey,string,'tickbox'] | [SettingsKey,string,'select', Record<string,string>])[] = [
-		['propertyPicker.style', 'Property Picker Style', 'select', {
-			'Classic': 'classic',
-			'Modern': 'batch'
-		}],
+	const options: (
+		| [SettingsKey, string, 'text']
+		| [SettingsKey, string, 'number']
+		| [SettingsKey, string, 'tickbox']
+		| [SettingsKey, string, 'select', Record<string, string>]
+	)[] = [
+		[
+			'propertyPicker.style',
+			'Property Picker Style',
+			'select',
+			{
+				Classic: 'classic',
+				Modern: 'batch',
+			},
+		],
+		['camera.scaledMotion', 'Magic Panning', 'tickbox'],
+		['camera.speed', 'Camera Speed', 'number'],
 	];
 
 	for (const [key, title, type, data] of options) {
@@ -86,54 +123,58 @@ export function showSettingsWindow() {
 		const label = document.createElement('span');
 		label.textContent = title;
 
-		let input:Node = document.createTextNode(`[placeholder]`);
+		let input: Node = document.createTextNode(`[placeholder]`);
 
 		switch (type) {
-			case 'select': {
-				const selector = document.createElement('select');
-				for (const [title,prefName] of Object.entries(data)) {
-					const option = document.createElement('option');
-					option.textContent = title;
-					option.value = prefName;
-					selector.appendChild(option);
+			case 'select':
+				{
+					const selector = document.createElement('select');
+					for (const [title, prefName] of Object.entries(data)) {
+						const option = document.createElement('option');
+						option.textContent = title;
+						option.value = prefName;
+						selector.appendChild(option);
+					}
+					selector.value = settings.getString(key);
+					selector.onchange = () => {
+						settings.setPref(key, selector.value);
+					};
+					input = selector;
 				}
-				selector.value = settings.getPref(key);
-				selector.onchange = () => {
-					settings.setPref(key, selector.value);
+				break;
+			case 'tickbox':
+				{
+					const tick = document.createElement('input');
+					tick.type = 'checkbox';
+					tick.checked = settings.getBoolean(key);
+					tick.onchange = () => {
+						settings.setPref(key, tick.checked);
+					};
+					input = tick;
 				}
-				input = selector;
-			}
-			break;
-			case 'tickbox': {
-				const tick = document.createElement('input');
-				tick.type = 'checkbox';
-				tick.checked = settings.getPref(key);
-				tick.onchange = () => {
-					settings.setPref(key, tick.checked);
+				break;
+			case 'number':
+				{
+					const num = document.createElement('input');
+					num.type = 'number';
+					num.value = settings.getNumber(key).toString();
+					num.onchange = () => {
+						settings.setPref(key, Number(num.value));
+					};
+					input = num;
 				}
-				input = tick;
-			}
-			break;
-			case 'number': {
-				const num = document.createElement('input');
-				num.type = 'number';
-				num.value = settings.getPref(key);
-				num.onchange = () => {
-					settings.setPref(key, num.value);
+				break;
+			case 'text':
+				{
+					const elm = document.createElement('input');
+					elm.type = 'text';
+					elm.value = settings.getString(key);
+					elm.onchange = () => {
+						settings.setPref(key, elm.value);
+					};
+					input = elm;
 				}
-				input = num;
-			}
-			break;
-			case 'text': {
-				const elm = document.createElement('input');
-				elm.type = 'text';
-				elm.value = settings.getPref(key);
-				elm.onchange = () => {
-					settings.setPref(key, elm.value);
-				}
-				input = elm;
-			}
-			break;
+				break;
 		}
 
 		row.appendChild(label);
@@ -141,4 +182,9 @@ export function showSettingsWindow() {
 
 		content.appendChild(row);
 	}
+
+	// fix a bug in firefox
+	content.classList.remove('content');
+	content.getBoundingClientRect(); // force style recalc
+	content.classList.add('content');
 }
