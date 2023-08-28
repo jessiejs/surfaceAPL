@@ -284,19 +284,19 @@ export let mask = `
 
 if (propertyPickerStyle == 'batch') {
 	mask[TileType.PropertyGrab - 1] = {
-		category: 7,
+		category: 6,
 		doHue: false,
 		isAccessible: true
 	};
 	mask[TileType.PropertyPut - 1] = {
-		category: 7,
+		category: 6,
 		doHue: false,
 		isAccessible: true
 	};	
 }
 
 mask[TileType.PropertyEdit - 1] = {
-	category: 7,
+	category: 6,
 	doHue: false,
 	isAccessible: true
 };
@@ -310,7 +310,7 @@ for (const indx in mask) {
 	}
 }
 
-export const categories: number[][] = [[], [], [], [], [], [], [], []];
+export const categories: number[][] = [[], [], [], [], [], [], []];
 export const rotatables: number[] = [
 	TileType.Checkpoint2,
 	TileType.End1,
@@ -352,3 +352,11 @@ for (const objIndex in mask) {
 		categories[object.category]?.push(Number(objIndex) + 1);
 	}
 }
+
+// FIXME:
+//    i don't know why this happens
+//    i don't know how this happens
+//    but for some reason the spider is so powerful that it just disobeys the category system
+//    so i have to commit this criem against good code
+categories[6] = categories[6].filter(id => id != 60);
+categories[3].push(60);
