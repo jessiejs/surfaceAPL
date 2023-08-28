@@ -16,6 +16,7 @@ import {
 import copy from '../IO/copy';
 import about from './about';
 import { showExportDialog } from './export';
+import prompt from '../IO/prompt';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -144,8 +145,11 @@ export function createEditor(level: Level): Editor {
 	document.querySelector("nav")!.appendChild(exportButton);
 	document.querySelector("nav")!.appendChild(aboutButton);
 
+	let data:string = "";
+	let lastNonTemporaryID = -1;
+
 	return {
-		tick(deltaTime: number) {
+		async tick(deltaTime: number) {
 			behaviour = getBehaviour(tool.id, tool.rotation);
 
 			frameInfo.visibleTiles = 0;
@@ -368,7 +372,7 @@ export function createEditor(level: Level): Editor {
 			}
 
 			// place
-			if (isMouseDown) {
+			if (isMouseDown && behaviour.editStyle == "tiles") {
 				if (useEmpty) {
 					if (selectedIndex != -1) {
 						level.tiles[selectedIndex].id = TileType.Blank;
@@ -384,6 +388,32 @@ export function createEditor(level: Level): Editor {
 						}
 					}
 				}
+			}
+
+			// data dropper
+			if (isMouseDown && behaviour.editStyle == "property.grab") {
+				if (selectedIndex != -1) {
+					data = level.tiles[selectedIndex].data;
+				}
+			}
+			if (isMouseDown && behaviour.editStyle == "property.drop") {
+				if (selectedIndex != -1) {
+					level.tiles[selectedIndex].data = data;
+				}
+			}
+			if (behaviour.editStyle == "property.edit") {
+				await prompt('Edit data', 'x10y10');
+			}
+
+			// temp magic
+			let isTemporary = false;
+			if (behaviour.editStyle == "property.edit")
+				isTemporary = true;
+
+			if (isTemporary) {
+				tool.id = lastNonTemporaryID;
+			} else {
+				lastNonTemporaryID = tool.id;
 			}
 
 			let targetSelectionWidth = 50;

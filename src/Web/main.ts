@@ -69,7 +69,7 @@ if (window.location.pathname == '/level') {
 		const time = await waitFrame();
 		const delta = Math.min((time - pTime) / 1000, 1 / 20);
 		pTime = time;
-		editor.tick(delta);
+		await editor.tick(delta);
 	}
 	
 	editor.destroy();
