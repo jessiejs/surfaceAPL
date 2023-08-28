@@ -175,6 +175,11 @@ dialog {
 		}
 	}
 
+	> .content:not(:has(.qr)) {
+		max-height: 300px;
+		overflow: hidden auto;
+	}
+
 	> .submit-bar {
 		display: flex;
 		flex-direction: row;
@@ -253,27 +258,41 @@ label {
 	gap: 5px;
 	font-size: 14px;
 	width: 100%;
+}
 
-	> input,
-	> select {
-		font-size: 14px;
-		padding: 6px 12px;
-		border-radius: 5px;
-		font-family: Inter;
-		border: 1px solid $raisedBorder;
-		background-color: $drop;
-		width: 100%;
-	}
-	> textarea {
-		font-size: 14px;
-		padding: 6px 12px;
-		border-radius: 5px;
-		font-family: Inter;
-		border: 1px solid $raisedBorder;
-		background-color: $inset;
-		width: 100%;
-		resize: none;
-		height: 150px;
+input, select {
+	font-size: 14px;
+	padding: 6px 12px;
+	border-radius: 5px;
+	font-family: Inter;
+	border: 1px solid $raisedBorder;
+	background-color: $drop;
+	width: 100%;
+}
+select {
+	cursor: pointer;
+}
+textarea {
+	font-size: 14px;
+	padding: 6px 12px;
+	border-radius: 5px;
+	font-family: Inter;
+	border: 1px solid $raisedBorder;
+	background-color: $inset;
+	width: 100%;
+	resize: none;
+	height: 150px;
+}
+
+.settings-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+
+	> input, select {
+		width: 50%;
 	}
 }
 

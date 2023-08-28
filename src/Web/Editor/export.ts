@@ -107,6 +107,7 @@ export async function share(level: Level) {
 				img.alt = 'QR Code';
 				img.style.borderRadius = '5px';
 				img.style.width = '100%';
+				img.classList.add('qr');
 
 				const { content } = createDialog('QR Code', {
 					buttons: [

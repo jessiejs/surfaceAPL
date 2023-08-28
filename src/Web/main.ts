@@ -14,6 +14,7 @@ import { loadLevelURL } from './Editor/levelURL';
 import { keyDown, keyUp } from './IO/keyhandlers';
 import prompt from './IO/prompt';
 import select from './IO/select';
+import { getSettings, settings } from './Settings/settings';
 
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);

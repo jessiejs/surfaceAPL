@@ -27,6 +27,7 @@ import about from './about';
 import { showExportDialog } from './export';
 import prompt from '../IO/prompt';
 import { propertyPickerStyle } from '../config';
+import { SettingsManager, showSettingsWindow } from '../Settings/settings';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -430,10 +431,16 @@ export function createEditor(level: Level): Editor {
 					isMouseDown = false;
 				}
 			}
+			if (behaviour.editStyle == 'settings') {
+				showSettingsWindow();
+			}
 
 			// temp magic
 			let isTemporary = false;
-			if (behaviour.editStyle == 'property.edit' && propertyPickerStyle == 'batch') isTemporary = true;
+			if (behaviour.editStyle == 'property.edit' && propertyPickerStyle == 'batch') 
+				isTemporary = true;
+			if (behaviour.editStyle == 'settings') 
+				isTemporary = true;
 
 			if (isTemporary) {
 				tool.id = lastNonTemporaryID;

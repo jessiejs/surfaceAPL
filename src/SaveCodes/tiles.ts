@@ -95,6 +95,7 @@ export const TileType = {
 	PropertyGrab: extendedID++,
 	PropertyEdit: extendedID++,
 	PropertyPut: extendedID++,
+	Settings: extendedID++,
 };
 
 export type EditorBehaviour = {
@@ -103,7 +104,8 @@ export type EditorBehaviour = {
 		| 'wall'
 		| 'property.grab'
 		| 'property.drop'
-		| 'property.edit';
+		| 'property.edit'
+		| 'settings';
 	placingID: number;
 	placingRotation: number;
 	showTiles: boolean;
@@ -142,6 +144,15 @@ export function getBehaviour(id: number, rotation: number): EditorBehaviour {
 	} else if (id == TileType.PropertyEdit) {
 		return {
 			editStyle: 'property.edit',
+			placingID: id,
+			showTiles: true,
+			showWall: false,
+			lockY: false,
+			placingRotation: rotation,
+		};
+	} else if (id == TileType.Settings) {
+		return {
+			editStyle: 'settings',
 			placingID: id,
 			showTiles: true,
 			showWall: false,
@@ -301,6 +312,12 @@ mask[TileType.PropertyEdit - 1] = {
 	isAccessible: true
 };
 
+mask[TileType.Settings - 1] = {
+	category: 6,
+	doHue: false,
+	isAccessible: true
+}
+
 for (const indx in mask) {
 	if (mask[indx].category == -1) {
 		mask[indx].category = NaN;
@@ -343,6 +360,8 @@ export const rotatables: number[] = [
 	TileType.Checkpoint9,
 	TileType.Green1101,
 	TileType.Unused,
+	TileType.Apple,
+	TileType.Costume5
 ];
 
 for (const objIndex in mask) {
