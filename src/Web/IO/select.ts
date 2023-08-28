@@ -2,7 +2,7 @@ import createDialog from "./dialog"
 
 export default function (
 	label:string,
-	options:string[]
+	options:{text:string, isThereMore:boolean}[]
 ): Promise<string> {
 	return new Promise((resolve) => {
 		const { content, close, buttonElements } = createDialog(`Select`, {
@@ -17,9 +17,9 @@ export default function (
 
 		for (const option of options) {
 			const button = document.createElement('button');
-			button.textContent = option;
+			button.textContent = option.text + (option.isThereMore ? '...' : '');
 			button.addEventListener('click', () => {
-				resolve(option);
+				resolve(option.text);
 				close();
 			});
 			button.style.display = 'block';
