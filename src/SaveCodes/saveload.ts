@@ -1,12 +1,16 @@
-import { Direction, TileType, Wall } from './tiles';
+import { Direction, TileType, WallType } from './tiles';
 
 export type Level = {
 	width: number;
 	height: number;
 	tiles: Tile[];
-	walls: number[];
+	walls: Wall[];
 	hue: number;
 	hue2: number;
+};
+export type Wall = {
+	type: number;
+	height: number;
 };
 export type Tile = {
 	id: number;
@@ -35,10 +39,13 @@ export function loadLevel(level: string): Level {
 	}
 
 	if (sections.length == 0) {
-		const walls: number[] = [];
+		const walls: Wall[] = [];
 
 		for (let i = 0; i < width; i++) {
-			walls.push(Wall.Flat);
+			walls.push({
+				height: 0,
+				type: WallType.Flat
+			});
 		}
 
 		return {
@@ -80,13 +87,19 @@ export function loadLevel(level: string): Level {
 	}
 
 	// Read the walls
-	const walls: number[] = [];
+	const walls: Wall[] = [];
 
 	let wall = sections.shift();
 	while (wall != '' && wall) {
-		walls.push(Number(wall));
-
+		let height = Number(wall);
 		wall = sections.shift();
+		let type = Number(wall);
+		wall = sections.shift();
+
+		walls.push({
+			type,
+			height
+		});
 	}
 
 	let h = 0;
@@ -203,7 +216,8 @@ export function encodeLevel(
 
 	// Write the walls
 	for (const wall of level.walls) {
-		segments.push(wall);
+		segments.push(wall.height);
+		segments.push(wall.type);
 	}
 	segments.push('');
 

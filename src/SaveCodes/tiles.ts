@@ -170,11 +170,11 @@ export const Direction = {
 	UpsideDown: 3,
 	Left: 0,
 };
-export const Wall = {
-	Flat: 0,
-	Down: 1,
-	Up: 2,
-	Spike: 3,
+export const WallType = {
+	Flat: 1,
+	Down: 2,
+	Up: 3,
+	Spike: 4,
 };
 
 export const mask = `        

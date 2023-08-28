@@ -2,12 +2,13 @@ import { waitFrame } from '../Promises/wait';
 import {
 	Level,
 	Tile,
+	Wall,
 	encodeLevel,
 	loadLevel,
 	mainLevelCodeToOpenCode,
 	openCodeToMainLevelCode,
 } from '../SaveCodes/saveload';
-import { Direction, TileType } from '../SaveCodes/tiles';
+import { Direction, TileType, WallType } from '../SaveCodes/tiles';
 import { createEditor } from './Editor/editor';
 import { loadLevelURL } from './Editor/levelURL';
 import { keyDown, keyUp } from './IO/keyhandlers';
@@ -76,10 +77,13 @@ if (window.location.pathname == '/level') {
 		const width = 192;
 		const height = 192;
 		const tiles:Tile[] = [];
-		const wall:number[] = [];
+		const wall:Wall[] = [];
 
 		for (let y = 0; y < height; y++) {
-			wall.push(0,1);
+			wall.push({
+				height: 0,
+				type: WallType.Flat,
+			});
 			for (let x = 0; x < width; x++) {
 				if (x == 1 && y == 3) {
 					tiles.push({
@@ -114,6 +118,8 @@ if (window.location.pathname == '/level') {
 				}
 			}
 		}
+
+		tiles.pop();
 
 		const level:Level = {
 			width,

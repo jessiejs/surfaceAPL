@@ -115,6 +115,7 @@ export function createEditor(level: Level): Editor {
 	canvas.addEventListener('mousedown', () => {
 		isMouseDown = true;
 		if (selectedIndex != -1) {
+			console.log(selectedIndex, level.tiles[selectedIndex], level);
 			useEmpty = level.tiles[selectedIndex].id == behaviour.placingID;
 		} else {
 			useEmpty = false;
@@ -370,14 +371,14 @@ export function createEditor(level: Level): Editor {
 				mousePosInWorldCoords[0] < (level.width + 1) * 62 &&
 				mousePosInWorldCoords[1] < (level.height + 1) * 62
 			) {
-				selectedIndex = standardCoordsToIndex(
+				selectedIndex = Math.round(standardCoordsToIndex(
 					[
 						Math.round((mousePosInWorldCoords[0] - 31) / 62),
 						Math.round((mousePosInWorldCoords[1] - 31) / 62),
 					],
 					level.width,
 					level.height
-				);
+				));
 			}
 
 			// place
