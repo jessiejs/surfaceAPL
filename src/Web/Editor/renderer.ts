@@ -88,7 +88,7 @@ export function drawTile({
 
 		const radians = (realRotation * Math.PI) / 180;
 
-		if (mask.split('\n')[id - 1][8]?.toLowerCase() == 'h') {
+		if (mask[id - 1].doHue) {
 			// hue shift
 			ctx.filter = `hue-rotate(${Math.round((hue / 200) * 360)}deg)`;
 		} else {

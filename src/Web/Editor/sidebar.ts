@@ -104,7 +104,7 @@ export function createSidebar(
 					tile.data = 'r0';
 				}
 				if (
-					mask.split('\n')[tile.id - 1][8] == 'h' &&
+					mask[tile.id - 1].doHue &&
 					![
 						TileType.Green1111,
 						TileType.Stomp01,

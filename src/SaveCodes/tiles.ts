@@ -177,7 +177,19 @@ export const WallType = {
 	Spike: 4,
 };
 
-export const mask = `        
+let maskIndex = 0;
+
+export const unknown_1 = maskIndex++;
+export const unknown_2 = maskIndex++;
+export const unknown_3 = maskIndex++;
+export const unknown_4 = maskIndex++;
+export const unknown_5 = maskIndex++;
+export const unknown_6 = maskIndex++;
+export const unknown_7 = maskIndex++;
+export const mask_category = maskIndex++;
+export const mask_hue = maskIndex++;
+
+export let mask = `        
 5555   1h
 5555   1h
 5005   1h
@@ -262,18 +274,10 @@ export const mask = `
 .00.   3h
 111100 2
 ****00 5
-5555   1h`;
-
-let maskIndex = 0;
-
-export const unknown_1 = maskIndex++;
-export const unknown_2 = maskIndex++;
-export const unknown_3 = maskIndex++;
-export const unknown_4 = maskIndex++;
-export const unknown_5 = maskIndex++;
-export const unknown_6 = maskIndex++;
-export const unknown_7 = maskIndex++;
-export const mask_category = maskIndex++;
+5555   1h`.split('\n').map(l => ({
+	doHue: l[mask_hue] == 'h',
+	category: Number(l[mask_category]) - 1
+}));
 
 export const categories: number[][] = [[], [], [], [], [], [], []];
 export const rotatables: number[] = [
@@ -311,11 +315,9 @@ export const rotatables: number[] = [
 ];
 
 let objIndex = 0;
-for (const object of mask.split('\n')) {
-	const category = object[mask_category];
-
-	if (category) {
-		categories[Number(category) - 1]?.push(objIndex + 1);
+for (const object of mask) {
+	if (!isNaN(object.category)) {
+		categories[object.category]?.push(objIndex + 1);
 	}
 	objIndex++;
 }
