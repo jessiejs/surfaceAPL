@@ -37,4 +37,6 @@ if (webhook) {
 			content: `Updated from ${beforeVersion} to ${afterVersion}, update type ${versionUpdateType}`,
 		}),
 	})
+} else {
+	console.log(`No webhooks :raised_eyebrows:`);
 }
