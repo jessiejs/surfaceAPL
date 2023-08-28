@@ -31,7 +31,7 @@ export default {
 		rollupOptions: {
 			input: {
 			  main: join(__dirname, "index.html"),
-			  level: join(__dirname, "level.html")
+			  level: join(__dirname, "level/index.html")
 			},
 		},
 	}
