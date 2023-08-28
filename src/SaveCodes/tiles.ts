@@ -1,3 +1,5 @@
+import { propertyPickerStyle } from "../Web/config";
+
 let extendedID = 1000;
 export const TileType = {
 	Blank: 1,
@@ -91,8 +93,8 @@ export const TileType = {
 	WallUp: extendedID++,
 	WallSpike: extendedID++,
 	PropertyGrab: extendedID++,
-	PropertyDrop: extendedID++,
 	PropertyEdit: extendedID++,
+	PropertyPut: extendedID++,
 };
 
 export type EditorBehaviour = {
@@ -128,7 +130,7 @@ export function getBehaviour(id: number, rotation: number): EditorBehaviour {
 			lockY: false,
 			placingRotation: rotation,
 		};
-	} else if (id == TileType.PropertyDrop) {
+	} else if (id == TileType.PropertyPut) {
 		return {
 			editStyle: 'property.drop',
 			placingID: id,
@@ -276,10 +278,39 @@ export let mask = `
 ****00 5
 5555   1h`.split('\n').map(l => ({
 	doHue: l[mask_hue] == 'h',
-	category: Number(l[mask_category]) - 1
-}));
+	category: Number(l[mask_category]) - 1,
+	isAccessible: false
+})) as { doHue: boolean, category?: number, isAccessible: boolean }[];
 
-export const categories: number[][] = [[], [], [], [], [], [], []];
+if (propertyPickerStyle == 'batch') {
+	mask[TileType.PropertyGrab - 1] = {
+		category: 7,
+		doHue: false,
+		isAccessible: true
+	};
+	mask[TileType.PropertyPut - 1] = {
+		category: 7,
+		doHue: false,
+		isAccessible: true
+	};	
+}
+
+mask[TileType.PropertyEdit - 1] = {
+	category: 7,
+	doHue: false,
+	isAccessible: true
+};
+
+for (const indx in mask) {
+	if (mask[indx].category == -1) {
+		mask[indx].category = NaN;
+	}
+	if (isNaN(mask[indx].category || NaN) && mask[indx].category != 0) {
+		mask[indx].category = undefined;
+	}
+}
+
+export const categories: number[][] = [[], [], [], [], [], [], [], []];
 export const rotatables: number[] = [
 	TileType.Checkpoint2,
 	TileType.End1,
@@ -314,10 +345,10 @@ export const rotatables: number[] = [
 	TileType.Unused,
 ];
 
-let objIndex = 0;
-for (const object of mask) {
-	if (!isNaN(object.category)) {
-		categories[object.category]?.push(objIndex + 1);
+for (const objIndex in mask) {
+	const object = mask[objIndex];
+	console.log(object);
+	if (object.category != undefined) {
+		categories[object.category]?.push(Number(objIndex) + 1);
 	}
-	objIndex++;
 }

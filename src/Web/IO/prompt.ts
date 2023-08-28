@@ -5,8 +5,10 @@ export default function (
 	placeholder: string,
 	{
 		validateFunction,
-	}: { validateFunction: (text: string) => string | undefined } = {
+		defaultValue
+	}: { validateFunction: (text: string) => string | undefined, defaultValue?: string } = {
 		validateFunction: _ => undefined,
+		defaultValue: undefined
 	}
 ): Promise<string> {
 	return new Promise(resolve => {
@@ -15,6 +17,10 @@ export default function (
 
 		const inputElm = document.createElement('input');
 		inputElm.placeholder = placeholder;
+
+		if (defaultValue) {
+			inputElm.value = defaultValue;
+		}
 
 		label.appendChild(inputElm);
 
@@ -67,6 +73,14 @@ export default function (
 				event.preventDefault();
 			}
 		});
+
+		const interval = setInterval(() => {
+			inputElm.focus();			
+		}, 0);
+
+		setTimeout(() => {
+			clearInterval(interval);
+		},500);
 
 		content.appendChild(label);
 		content.appendChild(errorElm);

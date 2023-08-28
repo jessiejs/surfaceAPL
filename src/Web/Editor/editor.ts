@@ -26,6 +26,7 @@ import copy from '../IO/copy';
 import about from './about';
 import { showExportDialog } from './export';
 import prompt from '../IO/prompt';
+import { propertyPickerStyle } from '../config';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -413,15 +414,33 @@ export function createEditor(level: Level): Editor {
 				}
 			}
 			if (behaviour.editStyle == 'property.edit') {
-				await prompt('Edit data', 'x10y10');
+				if (propertyPickerStyle == "batch") {
+					data = await prompt('Edit data', 'x10y10', {
+						defaultValue: data,
+						validateFunction() {
+							return undefined;
+						}
+					});
+				} else if (isMouseDown) {
+					data = level.tiles[selectedIndex].data;
+					data = await prompt('Edit data', 'x10y10', {
+						defaultValue: data,
+						validateFunction() {
+							return undefined;
+						}
+					});
+					level.tiles[selectedIndex].data = data;
+					isMouseDown = false;
+				}
 			}
 
 			// temp magic
 			let isTemporary = false;
-			if (behaviour.editStyle == 'property.edit') isTemporary = true;
+			if (behaviour.editStyle == 'property.edit' && propertyPickerStyle == 'batch') isTemporary = true;
 
 			if (isTemporary) {
 				tool.id = lastNonTemporaryID;
+				updateSidebar(tool);
 			} else {
 				lastNonTemporaryID = tool.id;
 			}
@@ -559,6 +578,11 @@ export function createEditor(level: Level): Editor {
 			if (!dualRendering) {
 				dbg.removeGap();
 				dbg(`Dual-rendering is disabled`);
+			}
+
+			if (behaviour.editStyle.startsWith("property.") && data != '') {
+				dbg.title(`Property Picker`);
+				dbg(`Data: ${data}`);
 			}
 
 			const superpainTileLimit = 100;

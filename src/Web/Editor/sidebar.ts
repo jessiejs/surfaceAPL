@@ -250,6 +250,10 @@ export function createSidebar(
 					tile
 				]?.toLowerCase()}.svg`;
 
+				if (mask[tile - 1].isAccessible) {
+					img.classList.add('accessible');
+				}
+
 				tileElm.appendChild(img);
 
 				tileElm.dataset.rotation1For = `${tile}`;
