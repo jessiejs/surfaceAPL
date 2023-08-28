@@ -2,7 +2,6 @@ import { waitFrame } from "../Promises/wait";
 import { loadLevel, mainLevelCodeToOpenCode, openCodeToMainLevelCode } from "../SaveCodes/saveload";
 import { createEditor } from "./Editor/editor";
 import { loadLevelURL } from "./Editor/levelURL";
-import copy from "./IO/copy";
 import { keyDown, keyUp } from "./IO/keyhandlers";
 import prompt from "./IO/prompt";
 import select from "./IO/select";
@@ -12,7 +11,6 @@ window.addEventListener('keyup',keyUp);
 
 if (window.location.pathname == '/level') {
 	loadLevelURL();
-	throw `Early stop`;
 }
 
 (async () => {

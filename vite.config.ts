@@ -1,5 +1,6 @@
 import { exec } from 'node:child_process';
 import { version } from 'node:os';
+import { join } from 'node:path';
 
 const gitProc = exec(`git rev-parse HEAD`);
 
@@ -26,4 +27,12 @@ export default {
 		OS_INFO: JSON.stringify(`${process.platform}/${process.arch} (${version()})`),
 		NODE_INFO: JSON.stringify(`Node ${process.version}`),
 	},
+	build: {
+		rollupOptions: {
+			input: {
+			  main: join(__dirname, "index.html"),
+			  level: join(__dirname, "level.html")
+			},
+		},
+	}
 }

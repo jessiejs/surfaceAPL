@@ -35,8 +35,6 @@ export interface Camera {
 }
 
 export function createEditor(level: Level): Editor {
-	console.log(level);
-
 	let tool: Selection = {
 		id: TileType.Green1111,
 		rotation: 1,
