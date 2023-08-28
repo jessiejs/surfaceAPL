@@ -296,12 +296,14 @@ textarea {
 	justify-content: space-between;
 	width: 100%;
 	padding: 10px 20px;
+	font-family: 'Inter';
+	user-select: none;
+	font-size: 15px;
 
 	> input, select {
 		max-width: 150px;
 	}
-
-	> input[type="checkbox"] {
+	> input[type=checkbox] {
 		width: min-content;
 	}
 	height: 50px;

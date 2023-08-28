@@ -117,7 +117,7 @@ export function showSettingsWindow() {
 	];
 
 	for (const [key, title, type, data] of options) {
-		const row = document.createElement('div');
+		const row = document.createElement('label');
 		row.classList.add('settings-row');
 
 		const label = document.createElement('span');
