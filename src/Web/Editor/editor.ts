@@ -151,8 +151,16 @@ export function createEditor(level: Level): Editor {
 	});
 	aboutButton.textContent = 'About';
 
+	const settingsButton = document.createElement('a');
+	settingsButton.href = '#settings';
+	settingsButton.addEventListener('click', () => {
+		showSettingsWindow();
+	});
+	settingsButton.textContent = 'Settings';
+
 	document.querySelector('nav')!.appendChild(exportButton);
 	document.querySelector('nav')!.appendChild(aboutButton);
+	document.querySelector('nav')!.appendChild(settingsButton);
 
 	let data: string = '';
 	let lastNonTemporaryID = -1;
@@ -623,6 +631,7 @@ export function createEditor(level: Level): Editor {
 			canvas.removeEventListener('keyup', keyUpEventHandler);
 			exportButton.remove();
 			aboutButton.remove();
+			settingsButton.remove();
 		},
 	};
 }
