@@ -347,7 +347,6 @@ export const rotatables: number[] = [
 
 for (const objIndex in mask) {
 	const object = mask[objIndex];
-	console.log(object);
 	if (object.category != undefined) {
 		categories[object.category]?.push(Number(objIndex) + 1);
 	}

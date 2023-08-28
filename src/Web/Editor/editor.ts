@@ -116,7 +116,6 @@ export function createEditor(level: Level): Editor {
 	canvas.addEventListener('mousedown', () => {
 		isMouseDown = true;
 		if (selectedIndex != -1) {
-			console.log(selectedIndex, level.tiles[selectedIndex], level);
 			useEmpty = level.tiles[selectedIndex].id == behaviour.placingID;
 		} else {
 			useEmpty = false;
@@ -127,8 +126,6 @@ export function createEditor(level: Level): Editor {
 	});
 	keyDownHandlers.at(-1)!.push(keyDownEventHandler);
 	keyUpHandlers.at(-1)!.push(keyUpEventHandler);
-
-	console.log(keyDownHandlers, keyUpHandlers);
 
 	const img = lazyload();
 

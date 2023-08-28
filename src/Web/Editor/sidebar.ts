@@ -122,7 +122,6 @@ export function createSidebar(
 					tile.id = TileType.BIRD01;
 				}
 			}
-			console.log(`Pee`);
 		}
 	};
 

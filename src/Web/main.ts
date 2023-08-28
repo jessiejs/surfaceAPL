@@ -68,7 +68,6 @@ if (window.location.pathname == '/level') {
 		const prefix = type.split(' - ')[0];
 		const index = Number(prefix.split(' ')[1]) - 1;
 
-		console.log(prefix, index);
 		levelCode = mainLevelCodeToOpenCode(levelText.split('\n')[index]);
 	}
 
