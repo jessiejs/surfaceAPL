@@ -1,8 +1,8 @@
 export function lazyload() {
-	const store:Record<string,HTMLImageElement> = {};
-	let loaded:string[] = [];
+	const store: Record<string, HTMLImageElement> = {};
+	let loaded: string[] = [];
 
-	const lazyboy = (function (src:string) {
+	const lazyboy = function (src: string) {
 		if (!store[src]) {
 			store[src] = new Image();
 			store[src].src = src;
@@ -13,15 +13,19 @@ export function lazyload() {
 				loaded.push(src);
 				lazyboy.loaded++;
 				lazyboy.loading--;
-			}
+			};
 			store[src].onerror = () => {
 				console.error(`[lazyload] ${src} failed to load`);
 				if (src.endsWith('.png')) {
-					console.warn(`[lazyload] this may be caused by writing ${src}, try writing ${src.split("png").join("svg")}`)
+					console.warn(
+						`[lazyload] this may be caused by writing ${src}, try writing ${src
+							.split('png')
+							.join('svg')}`
+					);
 				}
 				lazyboy.failed++;
 				lazyboy.loading--;
-			}
+			};
 		}
 
 		if (loaded.includes(src)) {
@@ -29,15 +33,15 @@ export function lazyload() {
 		}
 
 		return undefined;
-	}) as (((src:string) => (HTMLImageElement | undefined)) & {
-		remove(src:string):void,
-		reload():void,
-		loading:number,
-		loaded:number,
-		failed:number
-	});
+	} as ((src: string) => HTMLImageElement | undefined) & {
+		remove(src: string): void;
+		reload(): void;
+		loading: number;
+		loaded: number;
+		failed: number;
+	};
 
-	lazyboy.remove = (src:string) => {
+	lazyboy.remove = (src: string) => {
 		const img = store[src];
 		delete store[src];
 		img.onload = _ => _;
@@ -59,7 +63,7 @@ export function lazyload() {
 		for (const key in store) {
 			delete store[key];
 		}
-	}
+	};
 
 	lazyboy.loading = 0;
 	lazyboy.loaded = 0;

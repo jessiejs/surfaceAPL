@@ -96,7 +96,12 @@ export const TileType = {
 };
 
 export type EditorBehaviour = {
-	editStyle: "tiles" | "wall" | "property.grab" | "property.drop" | "property.edit";
+	editStyle:
+		| 'tiles'
+		| 'wall'
+		| 'property.grab'
+		| 'property.drop'
+		| 'property.edit';
 	placingID: number;
 	placingRotation: number;
 	showTiles: boolean;
@@ -104,51 +109,51 @@ export type EditorBehaviour = {
 	lockY: boolean;
 };
 
-export function getBehaviour(id:number, rotation:number):EditorBehaviour {
+export function getBehaviour(id: number, rotation: number): EditorBehaviour {
 	if (id >= TileType.WallFlat && id <= TileType.WallSpike) {
 		return {
-			editStyle: "wall",
+			editStyle: 'wall',
 			placingID: id,
 			showTiles: false,
 			showWall: true,
 			lockY: true,
-			placingRotation: rotation
+			placingRotation: rotation,
 		};
 	} else if (id == TileType.PropertyGrab) {
 		return {
-			editStyle: "property.grab",
+			editStyle: 'property.grab',
 			placingID: id,
 			showTiles: true,
 			showWall: false,
 			lockY: false,
-			placingRotation: rotation
+			placingRotation: rotation,
 		};
 	} else if (id == TileType.PropertyDrop) {
 		return {
-			editStyle: "property.drop",
+			editStyle: 'property.drop',
 			placingID: id,
 			showTiles: true,
 			showWall: false,
 			lockY: false,
-			placingRotation: rotation
+			placingRotation: rotation,
 		};
 	} else if (id == TileType.PropertyEdit) {
 		return {
-			editStyle: "property.edit",
+			editStyle: 'property.edit',
 			placingID: id,
 			showTiles: true,
 			showWall: false,
 			lockY: false,
-			placingRotation: rotation
+			placingRotation: rotation,
 		};
 	} else {
 		return {
-			editStyle: "tiles",
+			editStyle: 'tiles',
 			placingID: id,
 			showTiles: true,
 			showWall: false,
 			lockY: false,
-			placingRotation: rotation
+			placingRotation: rotation,
 		};
 	}
 }
@@ -302,7 +307,7 @@ export const rotatables: number[] = [
 	TileType.WormA2,
 	TileType.Checkpoint9,
 	TileType.Green1101,
-	TileType.Unused
+	TileType.Unused,
 ];
 
 let objIndex = 0;

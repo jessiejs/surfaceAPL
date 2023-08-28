@@ -10,7 +10,11 @@ export async function loadLevelURL() {
 	}
 
 	// convert the base64 string to a Uint8Array
-	const uint8Array = new Uint8Array(atob(code!).split('').map(char => char.charCodeAt(0)));
+	const uint8Array = new Uint8Array(
+		atob(code!)
+			.split('')
+			.map(char => char.charCodeAt(0))
+	);
 
 	// un gzip
 	const data = await GZip.unzip(uint8Array);

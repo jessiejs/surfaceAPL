@@ -1,4 +1,4 @@
-import createDialog from "./dialog"
+import createDialog from './dialog';
 
 export default function (
 	text: string,
@@ -9,7 +9,7 @@ export default function (
 		validateFunction: _ => undefined,
 	}
 ): Promise<string> {
-	return new Promise((resolve) => {
+	return new Promise(resolve => {
 		const label = document.createElement('label');
 		label.textContent = text;
 
@@ -23,28 +23,32 @@ export default function (
 		errorElm.style.display = 'none';
 
 		const { content, close, buttonElements } = createDialog(`Prompt`, {
-			buttons: [{
-				text: 'Submit',
-				focus: true,
-				onclick: () => {
-					if (validateFunction(inputElm.value)) {
-						errorElm.style.display = 'block';
-						errorElm.textContent = validateFunction(inputElm.value)!;
-						inputElm.focus();
-						buttonElements[0].disabled = true;
-						return;
-					}
-					close();
-					resolve(inputElm.value);
-				}
-			}]
+			buttons: [
+				{
+					text: 'Submit',
+					focus: true,
+					onclick: () => {
+						if (validateFunction(inputElm.value)) {
+							errorElm.style.display = 'block';
+							errorElm.textContent = validateFunction(
+								inputElm.value
+							)!;
+							inputElm.focus();
+							buttonElements[0].disabled = true;
+							return;
+						}
+						close();
+						resolve(inputElm.value);
+					},
+				},
+			],
 		});
 
 		const submitButton = buttonElements[0];
 
 		submitButton.disabled = true;
 
-		inputElm.addEventListener('keyup', (event) => {
+		inputElm.addEventListener('keyup', event => {
 			const error = validateFunction(inputElm.value);
 
 			if (error) {
@@ -66,5 +70,5 @@ export default function (
 
 		content.appendChild(label);
 		content.appendChild(errorElm);
-	})
+	});
 }

@@ -23,4 +23,4 @@ if (versionUpdateType == 'major') {
 
 packageJsonObject.version = version.format();
 
-await writeFile('package.json', JSON.stringify(packageJsonObject,null,'\t'));
+await writeFile('package.json', JSON.stringify(packageJsonObject, null, '\t'));

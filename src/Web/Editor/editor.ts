@@ -1,4 +1,9 @@
-import { IdToString, TileType, getBehaviour, rotatables } from '../../SaveCodes/tiles';
+import {
+	IdToString,
+	TileType,
+	getBehaviour,
+	rotatables,
+} from '../../SaveCodes/tiles';
 import { keyDownHandlers, keyUpHandlers } from '../IO/keyhandlers';
 import { createSidebar, updateSidebar } from './sidebar';
 import {
@@ -8,7 +13,11 @@ import {
 import { createDebugger } from './debugger';
 import { lazyload } from '../Lazyboy/lazyload';
 import { drawTile, frameInfo } from './renderer';
-import { Level, encodeLevel, mainLevelCodeToOpenCode } from '../../SaveCodes/saveload';
+import {
+	Level,
+	encodeLevel,
+	mainLevelCodeToOpenCode,
+} from '../../SaveCodes/saveload';
 import {
 	indexToStandardCoords,
 	standardCoordsToIndex,
@@ -87,7 +96,7 @@ export function createEditor(level: Level): Editor {
 			event.clientY - canvas.getBoundingClientRect().top,
 		];
 	}
-	
+
 	function keyDownEventHandler(event: KeyboardEvent) {
 		if (!keysDown.includes(event.code)) {
 			keysDown.push(event.code);
@@ -130,7 +139,7 @@ export function createEditor(level: Level): Editor {
 
 	const exportButton = document.createElement('a');
 	exportButton.href = '#export';
-	exportButton.addEventListener('click',async () => {
+	exportButton.addEventListener('click', async () => {
 		showExportDialog(level);
 	});
 	exportButton.textContent = 'Export';
@@ -142,10 +151,10 @@ export function createEditor(level: Level): Editor {
 	});
 	aboutButton.textContent = 'About';
 
-	document.querySelector("nav")!.appendChild(exportButton);
-	document.querySelector("nav")!.appendChild(aboutButton);
+	document.querySelector('nav')!.appendChild(exportButton);
+	document.querySelector('nav')!.appendChild(aboutButton);
 
-	let data:string = "";
+	let data: string = '';
 	let lastNonTemporaryID = -1;
 
 	return {
@@ -372,7 +381,7 @@ export function createEditor(level: Level): Editor {
 			}
 
 			// place
-			if (isMouseDown && behaviour.editStyle == "tiles") {
+			if (isMouseDown && behaviour.editStyle == 'tiles') {
 				if (useEmpty) {
 					if (selectedIndex != -1) {
 						level.tiles[selectedIndex].id = TileType.Blank;
@@ -382,7 +391,8 @@ export function createEditor(level: Level): Editor {
 					if (selectedIndex != -1) {
 						level.tiles[selectedIndex].id = behaviour.placingID;
 						if (rotatables.includes(behaviour.placingID)) {
-							level.tiles[selectedIndex].rotation = behaviour.placingRotation;
+							level.tiles[selectedIndex].rotation =
+								behaviour.placingRotation;
 						} else {
 							level.tiles[selectedIndex].rotation = 1;
 						}
@@ -391,24 +401,23 @@ export function createEditor(level: Level): Editor {
 			}
 
 			// data dropper
-			if (isMouseDown && behaviour.editStyle == "property.grab") {
+			if (isMouseDown && behaviour.editStyle == 'property.grab') {
 				if (selectedIndex != -1) {
 					data = level.tiles[selectedIndex].data;
 				}
 			}
-			if (isMouseDown && behaviour.editStyle == "property.drop") {
+			if (isMouseDown && behaviour.editStyle == 'property.drop') {
 				if (selectedIndex != -1) {
 					level.tiles[selectedIndex].data = data;
 				}
 			}
-			if (behaviour.editStyle == "property.edit") {
+			if (behaviour.editStyle == 'property.edit') {
 				await prompt('Edit data', 'x10y10');
 			}
 
 			// temp magic
 			let isTemporary = false;
-			if (behaviour.editStyle == "property.edit")
-				isTemporary = true;
+			if (behaviour.editStyle == 'property.edit') isTemporary = true;
 
 			if (isTemporary) {
 				tool.id = lastNonTemporaryID;
@@ -424,8 +433,22 @@ export function createEditor(level: Level): Editor {
 			if (selectedIndex >= 0) {
 				targetSelectionWidth = 80;
 				targetSelectionHeight = 80;
-				targetSelectionCenterX = (indexToStandardCoords(selectedIndex, level.width, level.height)[0] * 62) + 31;
-				targetSelectionCenterY = (indexToStandardCoords(selectedIndex, level.width, level.height)[1] * 62) + 31;
+				targetSelectionCenterX =
+					indexToStandardCoords(
+						selectedIndex,
+						level.width,
+						level.height
+					)[0] *
+						62 +
+					31;
+				targetSelectionCenterY =
+					indexToStandardCoords(
+						selectedIndex,
+						level.width,
+						level.height
+					)[1] *
+						62 +
+					31;
 			}
 
 			if (isMouseDown) {
@@ -434,10 +457,14 @@ export function createEditor(level: Level): Editor {
 			}
 
 			// animate
-			selectionCenterX += (targetSelectionCenterX - selectionCenterX) * deltaTime * 25;
-			selectionCenterY += (targetSelectionCenterY - selectionCenterY) * deltaTime * 25;
-			selectionWidth += (targetSelectionWidth - selectionWidth) * deltaTime * 25;
-			selectionHeight += (targetSelectionHeight - selectionHeight) * deltaTime * 25;
+			selectionCenterX +=
+				(targetSelectionCenterX - selectionCenterX) * deltaTime * 25;
+			selectionCenterY +=
+				(targetSelectionCenterY - selectionCenterY) * deltaTime * 25;
+			selectionWidth +=
+				(targetSelectionWidth - selectionWidth) * deltaTime * 25;
+			selectionHeight +=
+				(targetSelectionHeight - selectionHeight) * deltaTime * 25;
 
 			// draw the little rectangle to show selection
 			ctx.strokeStyle = 'rgb(255,192,0)';
@@ -447,11 +474,17 @@ export function createEditor(level: Level): Editor {
 			cornerRadius -= (cornerRadius - 2) * 0.2;
 			ctx.lineWidth = width;
 			const topLeft = transformWorldCoordinatesToCameraCoordinates(
-				[selectionCenterX - selectionWidth / 2, selectionCenterY - selectionHeight / 2],
+				[
+					selectionCenterX - selectionWidth / 2,
+					selectionCenterY - selectionHeight / 2,
+				],
 				smoothCamera
 			);
 			const bottomRight = transformWorldCoordinatesToCameraCoordinates(
-				[selectionCenterX + selectionWidth / 2, selectionCenterY + selectionHeight / 2],
+				[
+					selectionCenterX + selectionWidth / 2,
+					selectionCenterY + selectionHeight / 2,
+				],
 				smoothCamera
 			);
 			ctx.beginPath();

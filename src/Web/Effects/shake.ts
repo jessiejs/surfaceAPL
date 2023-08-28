@@ -1,6 +1,16 @@
-import { wait } from "../../Promises/wait";
+import { wait } from '../../Promises/wait';
 
-export default async function({time,intensity,frequency,target}:{time:number,intensity:number,frequency:number,target?:HTMLElement | undefined}) {
+export default async function ({
+	time,
+	intensity,
+	frequency,
+	target,
+}: {
+	time: number;
+	intensity: number;
+	frequency: number;
+	target?: HTMLElement | undefined;
+}) {
 	const ourTarget = target ?? document.body;
 
 	// shake the screen
@@ -9,18 +19,21 @@ export default async function({time,intensity,frequency,target}:{time:number,int
 	const totalMotions = time / timeBetweenMotionsMS;
 
 	for (let i = 0; i < totalMotions; i++) {
-		const intensityMultiplier = (1-(i / totalMotions)) * intensity;
+		const intensityMultiplier = (1 - i / totalMotions) * intensity;
 		const x = (Math.random() - 0.5) * 2 * intensityMultiplier;
 		const y = (Math.random() - 0.5) * 2 * intensityMultiplier;
 		const transform = `translate(${x}px,${y}px)`;
-		ourTarget.animate([
+		ourTarget.animate(
+			[
+				{
+					transform: ourTarget.style.transform,
+				},
+				{ transform },
+			],
 			{
-				transform:ourTarget.style.transform
-			},
-			{ transform }
-		], {
-			duration: timeBetweenMotionsMS,
-		})
+				duration: timeBetweenMotionsMS,
+			}
+		);
 		//ourTarget.style.transform = transform;
 		await wait(timeBetweenMotionsMS);
 	}
@@ -28,27 +41,42 @@ export default async function({time,intensity,frequency,target}:{time:number,int
 	ourTarget.style.transform = '';
 }
 
-export async function bump({time,direction,target}:{time:number,direction:[number,number],target?:HTMLElement | undefined}) {
+export async function bump({
+	time,
+	direction,
+	target,
+}: {
+	time: number;
+	direction: [number, number];
+	target?: HTMLElement | undefined;
+}) {
 	const ourTarget = target ?? document.body;
 
 	// bump
 	const transform = `translate(${direction[0]}px,${direction[1]}px)`;
-	ourTarget.animate([
+	ourTarget.animate(
+		[
+			{
+				transform: '',
+			},
+			{ transform },
+		],
 		{
-			transform: ''
-		},
-		{ transform }
-	], {
-		duration: time / 2
-	});
-	ourTarget.animate([
-		{
-			transform
-		}, {
-			transform: ''
+			duration: time / 2,
 		}
-	], {
-		duration: time / 2
-	})
+	);
+	ourTarget.animate(
+		[
+			{
+				transform,
+			},
+			{
+				transform: '',
+			},
+		],
+		{
+			duration: time / 2,
+		}
+	);
 	ourTarget.style.transform = '';
 }

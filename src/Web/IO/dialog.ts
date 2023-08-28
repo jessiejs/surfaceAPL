@@ -1,15 +1,30 @@
-import shake from "../Effects/shake";
-import { keyDownHandlers, keyUpHandlers } from "./keyhandlers";
-import confetti from "canvas-confetti";
-import { pColors } from "./prd";
-import { Howl } from "howler";
+import shake from '../Effects/shake';
+import { keyDownHandlers, keyUpHandlers } from './keyhandlers';
+import confetti from 'canvas-confetti';
+import { pColors } from './prd';
+import { Howl } from 'howler';
 
-export default function(name:string, {buttons}:{buttons:{text:string,onclick?:()=>void,focus?:boolean,clickedText?:string,confetti?:boolean,close?:boolean,confettiFlag?:string}[]}):{
-	dialog:HTMLDialogElement,
-	actionbar:HTMLDivElement
-	content:HTMLDivElement,
-	buttonElements:HTMLButtonElement[],
-	close:()=>void
+export default function (
+	name: string,
+	{
+		buttons,
+	}: {
+		buttons: {
+			text: string;
+			onclick?: () => void;
+			focus?: boolean;
+			clickedText?: string;
+			confetti?: boolean;
+			close?: boolean;
+			confettiFlag?: string;
+		}[];
+	}
+): {
+	dialog: HTMLDialogElement;
+	actionbar: HTMLDivElement;
+	content: HTMLDivElement;
+	buttonElements: HTMLButtonElement[];
+	close: () => void;
 } {
 	// create a dialog
 	const dialog = document.createElement('dialog');
@@ -45,7 +60,7 @@ export default function(name:string, {buttons}:{buttons:{text:string,onclick?:()
 		dialog.appendChild(actionbar);
 	}
 
-	const buttonElements:HTMLButtonElement[] = [];
+	const buttonElements: HTMLButtonElement[] = [];
 
 	for (const button of buttons) {
 		const buttonElm = document.createElement('button');
@@ -63,34 +78,55 @@ export default function(name:string, {buttons}:{buttons:{text:string,onclick?:()
 				dialog.appendChild(confettiCanvas);
 				const confettiBox = confettiCanvas.getBoundingClientRect();
 				const buttonBox = buttonElm.getBoundingClientRect();
-				const buttonCenter = [buttonBox.left + buttonBox.width / 2, buttonBox.top + buttonBox.height / 2];
-				const prideColors = (button.confettiFlag ? [(pColors as Record<string,{stripes:{code:string}[]}>)[button.confettiFlag]] : Object.values(pColors)).map(v => v.stripes.map(stripe => stripe.code));
-				const chosenColors = prideColors[Math.floor(Math.random() * prideColors.length)];
+				const buttonCenter = [
+					buttonBox.left + buttonBox.width / 2,
+					buttonBox.top + buttonBox.height / 2,
+				];
+				const prideColors = (
+					button.confettiFlag
+						? [
+								(
+									pColors as Record<
+										string,
+										{ stripes: { code: string }[] }
+									>
+								)[button.confettiFlag],
+						  ]
+						: Object.values(pColors)
+				).map(v => v.stripes.map(stripe => stripe.code));
+				const chosenColors =
+					prideColors[Math.floor(Math.random() * prideColors.length)];
 				const colors = chosenColors;
-				const confettiPromise = confetti.create(confettiCanvas,{
-					resize:true
-				})({
-					origin: {
-						x: (buttonCenter[0] - confettiBox.x) / confettiBox.width,
-						y: (buttonCenter[1] - confettiBox.y) / confettiBox.height
-					},
-					colors,
-					gravity: 6,
-				})?.then(() => {
-					confettiCanvas.remove();
-				});
+				const confettiPromise = confetti
+					.create(confettiCanvas, {
+						resize: true,
+					})({
+						origin: {
+							x:
+								(buttonCenter[0] - confettiBox.x) /
+								confettiBox.width,
+							y:
+								(buttonCenter[1] - confettiBox.y) /
+								confettiBox.height,
+						},
+						colors,
+						gravity: 6,
+					})
+					?.then(() => {
+						confettiCanvas.remove();
+					});
 
 				for (let i = 0; i < 5; i++)
 					new Howl({
 						src: ['/SFX/clack.wav'],
-						rate: 0.8
+						rate: 0.8,
 					}).play();
-				
+
 				await shake({
 					target: dialog,
 					time: 100,
 					intensity: 10,
-					frequency: 500
+					frequency: 500,
 				});
 
 				await confettiPromise;
@@ -98,7 +134,7 @@ export default function(name:string, {buttons}:{buttons:{text:string,onclick?:()
 			if (button.close) {
 				close();
 			}
-		})
+		});
 		actionbar.appendChild(buttonElm);
 
 		if (button.focus) {
@@ -130,6 +166,6 @@ export default function(name:string, {buttons}:{buttons:{text:string,onclick?:()
 		actionbar,
 		content,
 		buttonElements,
-		close
+		close,
 	};
 }

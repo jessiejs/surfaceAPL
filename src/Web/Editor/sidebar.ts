@@ -1,22 +1,37 @@
-import shake, { bump } from "../Effects/shake";
-import { keyDownHandlers, keyUpHandlers } from "../IO/keyhandlers";
-import { Selection } from "./editor";
-import { IdToString, TileType, categories, mask, rotatables } from "../../SaveCodes/tiles";
-import { openDialogTestMenu } from "./dialogtest";
-import { click } from "../Effects/click";
-import { Level, encodeLevel, mainLevelCodeToOpenCode } from "../../SaveCodes/saveload";
-import copy from "../IO/copy";
+import shake, { bump } from '../Effects/shake';
+import { keyDownHandlers, keyUpHandlers } from '../IO/keyhandlers';
+import { Selection } from './editor';
+import {
+	IdToString,
+	TileType,
+	categories,
+	mask,
+	rotatables,
+} from '../../SaveCodes/tiles';
+import { openDialogTestMenu } from './dialogtest';
+import { click } from '../Effects/click';
+import {
+	Level,
+	encodeLevel,
+	mainLevelCodeToOpenCode,
+} from '../../SaveCodes/saveload';
+import copy from '../IO/copy';
 
-export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => Selection, setTool:(tool:Selection)=>void) {
-	const selectorEventListeners:((event:KeyboardEvent)=>void)[] = [];
+export function createSidebar(
+	level: Level,
+	sidebar: HTMLElement,
+	getTool: () => Selection,
+	setTool: (tool: Selection) => void
+) {
+	const selectorEventListeners: ((event: KeyboardEvent) => void)[] = [];
 
 	keyDownHandlers.push(selectorEventListeners);
 	keyUpHandlers.push([]);
 
-	const handler = (event:KeyboardEvent) => {
+	const handler = (event: KeyboardEvent) => {
 		if (event.code == 'KeyR') {
 			const tool = getTool();
-			
+
 			let rotation = tool.rotation + 1;
 
 			if (rotation > 4) {
@@ -25,7 +40,7 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 
 			setTool({
 				rotation,
-				id: tool.id
+				id: tool.id,
 			});
 			updateSidebar(getTool());
 			click();
@@ -39,34 +54,37 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 			const bumpAmount = 10;
 			if (rotation == 1) {
 				bump({
-					target:sidebar,
+					target: sidebar,
 					time: 5,
-					direction: [0, -bumpAmount]
+					direction: [0, -bumpAmount],
 				});
 			} else if (rotation == 2) {
 				bump({
-					target:sidebar,
+					target: sidebar,
 					time: 5,
-					direction: [bumpAmount, 0]
+					direction: [bumpAmount, 0],
 				});
 			} else if (rotation == 3) {
 				bump({
-					target:sidebar,
+					target: sidebar,
 					time: 5,
-					direction: [0, bumpAmount]
+					direction: [0, bumpAmount],
 				});
 			} else if (rotation == 4) {
 				bump({
-					target:sidebar,
+					target: sidebar,
 					time: 5,
-					direction: [-bumpAmount, 0]
+					direction: [-bumpAmount, 0],
 				});
 			}
 		} else if (event.code == 'KeyB') {
 			//openDialogTestMenu();
 		} else if (event.code == 'KeyZ') {
 			// Export
-			const internalCode = encodeLevel(level, { compress: true, makeNonEditableByJS: false });
+			const internalCode = encodeLevel(level, {
+				compress: true,
+				makeNonEditableByJS: false,
+			});
 			const openCode = mainLevelCodeToOpenCode(internalCode);
 
 			copy('Download your level', openCode);
@@ -85,7 +103,19 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 				if (tile.id == TileType.Stomp01) {
 					tile.data = 'r0';
 				}
-				if (mask.split("\n")[tile.id - 1][8] == 'h' && !([TileType.Green1111, TileType.Stomp01, TileType.Saw3, TileType.Spike0099, TileType.Spike0909,TileType.Green1111b, TileType.Unused, TileType.Green1000].includes(tile.id))) {
+				if (
+					mask.split('\n')[tile.id - 1][8] == 'h' &&
+					![
+						TileType.Green1111,
+						TileType.Stomp01,
+						TileType.Saw3,
+						TileType.Spike0099,
+						TileType.Spike0909,
+						TileType.Green1111b,
+						TileType.Unused,
+						TileType.Green1000,
+					].includes(tile.id)
+				) {
 					tile.id = TileType.Crumble00118;
 				}
 				if (tile.id == TileType.Saw2) {
@@ -103,7 +133,7 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 		catIndex++;
 		const ci = catIndex;
 
-		const handler = (event:KeyboardEvent) => {
+		const handler = (event: KeyboardEvent) => {
 			if (Number(event.key) === ci) {
 				const indexInCategory = category.indexOf(getTool().id);
 				const newIndex = (indexInCategory + 1) % category.length;
@@ -113,12 +143,12 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 				});
 				updateSidebar(getTool());
 				click();
-			
+
 				shake({
 					target: sidebar,
 					time: 15,
 					intensity: 10,
-					frequency: 500
+					frequency: 500,
 				});
 			}
 		};
@@ -173,7 +203,7 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 						rotation: 2,
 					});
 					updateSidebar(getTool());
-				})
+				});
 
 				rot3Elm.addEventListener('click', () => {
 					setTool({
@@ -181,7 +211,7 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 						rotation: 4,
 					});
 					updateSidebar(getTool());
-				})
+				});
 
 				rot4Elm.addEventListener('click', () => {
 					setTool({
@@ -189,7 +219,7 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 						rotation: 3,
 					});
 					updateSidebar(getTool());
-				})
+				});
 
 				rot1Img.src = `/Textures/Icons/${IdToString[
 					tile
@@ -216,7 +246,9 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 				tileElm.title = `${IdToString[tile]} (${tile})`;
 
 				const img = document.createElement('img');
-				img.src = `/Textures/Icons/${IdToString[tile]?.toLowerCase()}.svg`;
+				img.src = `/Textures/Icons/${IdToString[
+					tile
+				]?.toLowerCase()}.svg`;
 
 				tileElm.appendChild(img);
 
@@ -233,7 +265,7 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 						rotation: tool.rotation,
 					});
 					updateSidebar(getTool());
-				})
+				});
 
 				row.appendChild(tileElm);
 			}
@@ -252,18 +284,26 @@ export function createSidebar(level:Level, sidebar: HTMLElement, getTool: () => 
 	};
 }
 
-export function updateSidebar(tool:Selection) {
+export function updateSidebar(tool: Selection) {
 	for (const selected of document.querySelectorAll('.selected-button')) {
 		selected.classList.remove('selected-button');
 	}
 
 	if (tool.rotation == 1) {
-		document.querySelector(`[data-rotation1-for="${tool.id}"]`)?.classList.add('selected-button');
+		document
+			.querySelector(`[data-rotation1-for="${tool.id}"]`)
+			?.classList.add('selected-button');
 	} else if (tool.rotation == 2) {
-		document.querySelector(`[data-rotation2-for="${tool.id}"]`)?.classList.add('selected-button');
+		document
+			.querySelector(`[data-rotation2-for="${tool.id}"]`)
+			?.classList.add('selected-button');
 	} else if (tool.rotation == 3) {
-		document.querySelector(`[data-rotation3-for="${tool.id}"]`)?.classList.add('selected-button');
+		document
+			.querySelector(`[data-rotation3-for="${tool.id}"]`)
+			?.classList.add('selected-button');
 	} else if (tool.rotation == 4) {
-		document.querySelector(`[data-rotation4-for="${tool.id}"]`)?.classList.add('selected-button');
+		document
+			.querySelector(`[data-rotation4-for="${tool.id}"]`)
+			?.classList.add('selected-button');
 	}
 }

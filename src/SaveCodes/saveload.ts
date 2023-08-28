@@ -1,4 +1,4 @@
-import { Direction, TileType, Wall } from "./tiles";
+import { Direction, TileType, Wall } from './tiles';
 
 export type Level = {
 	width: number;

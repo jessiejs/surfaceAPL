@@ -16,8 +16,10 @@
 	}
 	border: 0 !important;
 
-	transition: background-color 0.2s,
-		transform 0.2s cubic-bezier(0.68, -0.6, 0.32, 1.6), width 0.2s,
+	transition:
+		background-color 0.2s,
+		transform 0.2s cubic-bezier(0.68, -0.6, 0.32, 1.6),
+		width 0.2s,
 		height 0.2s;
 
 	display: flex;
@@ -249,7 +251,8 @@ label {
 	font-size: 14px;
 	width: 100%;
 
-	> input, > select {
+	> input,
+	> select {
 		font-size: 14px;
 		padding: 6px 12px;
 		border-radius: 5px;

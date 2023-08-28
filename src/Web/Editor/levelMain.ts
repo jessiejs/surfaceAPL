@@ -1,3 +1,3 @@
-import { loadLevelURL } from "./levelURL";
+import { loadLevelURL } from './levelURL';
 
 loadLevelURL();
