@@ -22,9 +22,9 @@ export async function hostedQRCode(text:string) {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify({ input: await getURLForLevel(text) }),
-	}).then(res => res.json())) as {code?:string};
+	}).then(res => res.json())) as {code?:string}[];
 
-	if (!result.code) {
+	if (!result[0]?.code) {
 		await alert(`It looks like we couldn't host your level.`);
 		if (window.location.href.includes("localhost")) {
 			await alert(`This is probably due to the fact that you are using localhost, instead of our primary servers`);
@@ -32,7 +32,7 @@ export async function hostedQRCode(text:string) {
 		return;
 	}
 
-	const url = `https://gotiny.cc/${result.code}`;
+	const url = `https://gotiny.cc/${result[0]?.code}`;
 	
 	let dataURL = "";
 
