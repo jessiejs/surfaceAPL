@@ -6,13 +6,14 @@ export type SettingsData = {
 
 export type SettingsValue = number | string | boolean;
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener';
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow';
 
 const defaults: Record<SettingsKey, SettingsValue> = {
 	'propertyPicker.style': 'classic',
 	'camera.scaledMotion': true,
 	'camera.speed': 400,
-	'privacy.linkShortener': true
+	'privacy.linkShortener': true,
+	'setup.flow': false
 };
 
 type Immutable<T> = {
@@ -116,6 +117,7 @@ export function showSettingsWindow() {
 		['camera.scaledMotion', 'Magic Panning', 'tickbox'],
 		['camera.speed', 'Camera Speed', 'number'],
 		['privacy.linkShortener', 'Use Link Shortener', 'tickbox'],
+		['setup.flow', 'Completed flow setup', 'tickbox'],
 	];
 
 	for (const [key, title, type, data] of options) {

@@ -15,6 +15,7 @@ import { keyDown, keyUp } from './IO/keyhandlers';
 import prompt from './IO/prompt';
 import select from './IO/select';
 import { getSettings, settings } from './Settings/settings';
+import { setupFlow } from './flow';
 
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
@@ -56,7 +57,17 @@ if (window.location.pathname == '/level') {
 		'Unbalanced',
 	];
 
+	const customButtons:string[] = [];
+
+	if (!settings.getBoolean('setup.flow')) {
+		customButtons.push(`✨ Setup your flow`);
+	}
+
 	const type = await select('Level', [
+		...customButtons.map(t => ({
+			text: t,
+			isThereMore: false,
+		})),
 		{ text: 'New', isThereMore: false },
 		{ text: 'Custom', isThereMore: true },
 		...levelNames.map((l, i) => ({
@@ -70,6 +81,12 @@ if (window.location.pathname == '/level') {
 		const index = Number(prefix.split(' ')[1]) - 1;
 
 		levelCode = mainLevelCodeToOpenCode(levelText.split('\n')[index]);
+	}
+
+	if (type == '✨ Setup your flow') {
+		await setupFlow();
+		settings.setPref('setup.flow', true);
+		window.location.reload();
 	}
 
 	if (type == 'New') {

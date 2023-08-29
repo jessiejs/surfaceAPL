@@ -173,6 +173,9 @@ dialog {
 			color: $error;
 			font-size: 12px;
 		}
+		> p {
+			white-space: pre-wrap;
+		}
 	}
 
 	> .content:has(.settings-row) {
@@ -250,7 +253,8 @@ button:hover {
 button:focus,
 input:focus,
 textarea:focus,
-select:focus {
+select:focus,
+.select-wrapper:focus {
 	background-color: color-mix(in srgb, transparent, $accent 30%);
 	border: 1px solid $accent;
 	outline: none;
