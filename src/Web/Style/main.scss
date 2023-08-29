@@ -1,4 +1,4 @@
-@import 'https://fonts.googleapis.com/css?family=Inter:400,600,700';
+@import 'https://fonts.googleapis.com/css?family=Inter:400,600,700|Chivo+Mono';
 @import './color.scss';
 
 @mixin WidgetButtonHover {
@@ -90,6 +90,8 @@
 	color: $text;
 
 	font-family: Inter;
+
+	transition: right 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
 	@include VBox;
 }
@@ -415,10 +417,15 @@ aside {
 	max-width: 100%;
 }
 
+main {
+	overflow: hidden;
+}
+
 #canvas {
 	flex-grow: 1;
-	width: 100%;
-	height: 100%;
+	width: 100% !important;
+	height: 100% !important;
+	max-width: 100% !important;
 }
 
 dialog:has(.confetti) {
@@ -435,4 +442,57 @@ dialog:has(.confetti) {
 		background-color: transparent;
 		pointer-events: none;
 	}
+}
+
+.floatbar {
+	position: fixed;
+	right: 10px;
+	top: 10px;
+	bottom: 10px;
+	width: 400px;
+	border-radius: 5px;
+	background-color: $bg-3;
+	border: 1px solid $raisedBorder;
+	box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+	overflow: hidden;
+
+	transition: right 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	> header {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 7px;
+		font-size: 16px;
+		font-family: 'Chivo Mono';
+		font-weight: lighter;
+		text-transform: uppercase;
+
+		padding-bottom: 10px;
+		border-bottom: 1px solid $raisedBorder;
+
+		user-select: none;
+
+		> img {
+			height: 1.5em;
+		}
+	}
+
+	> .content {
+		flex-grow: 1;
+	}
+}
+
+.floatbar.hidden {
+	right: -10px;
+	transform: translateX(100%);
+}
+
+body:has(.floatbar:not(.hidden)) > .app {
+	//right: 420px;
 }

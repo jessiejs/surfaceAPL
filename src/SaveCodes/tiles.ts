@@ -1,3 +1,4 @@
+import { SettingsKey } from "../Web/Settings/settings";
 import { propertyPickerStyle } from "../Web/config";
 
 let extendedID = 1000;
@@ -96,6 +97,7 @@ export const TileType = {
 	PropertyEdit: extendedID++,
 	PropertyPut: extendedID++,
 	Settings: extendedID++,
+	Starzone: extendedID++,
 };
 
 export type EditorBehaviour = {
@@ -105,7 +107,8 @@ export type EditorBehaviour = {
 		| 'property.grab'
 		| 'property.drop'
 		| 'property.edit'
-		| 'settings';
+		| 'settings'
+		| 'starzone';
 	placingID: number;
 	placingRotation: number;
 	showTiles: boolean;
@@ -153,6 +156,15 @@ export function getBehaviour(id: number, rotation: number): EditorBehaviour {
 	} else if (id == TileType.Settings) {
 		return {
 			editStyle: 'settings',
+			placingID: id,
+			showTiles: true,
+			showWall: false,
+			lockY: false,
+			placingRotation: rotation,
+		};
+	} else if (id == TileType.Starzone) {
+		return {
+			editStyle: 'starzone',
 			placingID: id,
 			showTiles: true,
 			showWall: false,
@@ -291,7 +303,7 @@ export let mask = `
 	doHue: l[mask_hue] == 'h',
 	category: Number(l[mask_category]) - 1,
 	isAccessible: false
-})) as { doHue: boolean, category?: number, isAccessible: boolean, showWhen?: 'modern-property-picker' }[];
+})) as { doHue: boolean, category?: number, isAccessible: boolean, showWhen?: 'modern-property-picker' | `fl.${SettingsKey}` }[];
 
 mask[TileType.PropertyGrab - 1] = {
 	category: 6,
@@ -316,6 +328,13 @@ mask[TileType.Settings - 1] = {
 	category: 6,
 	doHue: false,
 	isAccessible: true
+}
+
+mask[TileType.Starzone - 1] = {
+	category: 6,
+	doHue: false,
+	isAccessible: true,
+	showWhen: 'fl.ff.STAR_TOOL'
 }
 
 for (const indx in mask) {

@@ -28,6 +28,7 @@ import { showExportDialog } from './export';
 import prompt from '../IO/prompt';
 import { propertyPickerStyle } from '../config';
 import { SettingsManager, settings, showSettingsWindow } from '../Settings/settings';
+import { createStarfloat } from './floatbar';
 
 export interface Editor {
 	tick(deltatime: number): void;
@@ -181,10 +182,16 @@ export function createEditor(level: Level): Editor {
 	let data: string = '';
 	let lastNonTemporaryID = -1;
 
+	const { visible: starVisible } = createStarfloat();
+
 	return {
 		async tick(deltaTime: number) {
 			behaviour = getBehaviour(tool.id, tool.rotation);
 
+			// floatbars
+			starVisible(behaviour.editStyle == 'starzone');
+
+			// rendering
 			frameInfo.visibleTiles = 0;
 
 			// size the canvas

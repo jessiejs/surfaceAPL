@@ -16,7 +16,7 @@ import {
 	mainLevelCodeToOpenCode,
 } from '../../SaveCodes/saveload';
 import copy from '../IO/copy';
-import { settings } from '../Settings/settings';
+import { SettingsKey, settings } from '../Settings/settings';
 
 export function createSidebar(
 	level: Level,
@@ -261,6 +261,10 @@ export function createSidebar(
 						} else {
 							tileElm.style.display = 'none';
 						}
+					});
+				} else if (mask[tile - 1].showWhen?.startsWith('fl.')) {
+					settings.bind<boolean>(mask[tile - 1].showWhen?.slice(3) as SettingsKey, (value) => {
+						tileElm.style.display = value ? 'block' : 'none';
 					});
 				}
 
