@@ -40,6 +40,8 @@ const textureOffsets = {
 	'/textures/fg/lock02.svg': [-0.25, 0],
 	'/textures/bg/lock02.svg': [-0.25, 0],
 	'/textures/icons/lock02.svg': [-0.25, 0],
+	'/textures/fg/burtha.svg': [0.5,-0.5],
+	'/textures/icons/burtha.svg': [0.5,-0.5]
 };
 
 export function drawTile({
