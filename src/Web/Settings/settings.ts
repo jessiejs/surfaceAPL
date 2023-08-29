@@ -6,7 +6,7 @@ export type SettingsData = {
 
 export type SettingsValue = number | string | boolean;
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about';
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo';
 
 export const defaults: Record<SettingsKey, SettingsValue> = {
 	'propertyPicker.style': 'classic',
@@ -17,6 +17,7 @@ export const defaults: Record<SettingsKey, SettingsValue> = {
 	'loca.about': 'About',
 	'loca.export': 'Export',
 	'loca.settings': 'Settings',
+	'settings.showDeveloperInfo': false,
 };
 
 type Immutable<T> = {
@@ -134,6 +135,7 @@ export function showSettingsWindow() {
 		['loca.about', 'About Title', 'text'],
 		['loca.export', 'Export Title', 'text'],
 		['loca.settings', 'Settings Title', 'text'],
+		['settings.showDeveloperInfo', 'Show internal setting names', 'tickbox'],
 	];
 
 	for (const [key, title, type, data] of options) {
@@ -142,6 +144,15 @@ export function showSettingsWindow() {
 
 		const label = document.createElement('span');
 		label.textContent = title;
+
+		const subtleLabel = document.createElement('span');
+		subtleLabel.style.opacity = '0.5';
+		subtleLabel.textContent = ` (${key})`;
+		settings.bind<boolean>('settings.showDeveloperInfo', (value) => {
+			subtleLabel.style.display = value ? 'inline' : 'none';
+		});
+
+		label.appendChild(subtleLabel);
 
 		let input: Node = document.createTextNode(`[placeholder]`);
 
