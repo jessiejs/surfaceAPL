@@ -3,9 +3,10 @@ import { keyDownHandlers, keyUpHandlers } from './keyhandlers';
 import confetti from 'canvas-confetti';
 import { pColors } from './prd';
 import { Howl } from 'howler';
+import { SettingsKey, settings } from '../Settings/settings';
 
 export default function (
-	name: string,
+	name: string | `p:${SettingsKey}`,
 	{
 		buttons,
 	}: {
@@ -35,6 +36,11 @@ export default function (
 	// create the title
 	const title = document.createElement('h1');
 	title.textContent = name;
+	if (name.startsWith('p:')) {
+		settings.bind<string>(name.substring(2) as SettingsKey, (value) => {
+			title.textContent = value;
+		})
+	}
 
 	// add the title and close button to the header
 	header.appendChild(title);

@@ -142,21 +142,27 @@ export function createEditor(level: Level): Editor {
 	exportButton.addEventListener('click', async () => {
 		showExportDialog(level);
 	});
-	exportButton.textContent = 'Export';
+	settings.bind<string>('loca.export',(value) => {
+		exportButton.textContent = value;
+	});
 
 	const settingsButton = document.createElement('a');
 	settingsButton.href = '#settings';
 	settingsButton.addEventListener('click', () => {
 		showSettingsWindow();
 	});
-	settingsButton.textContent = 'Settings';
+	settings.bind<string>('loca.settings',(value) => {
+		settingsButton.textContent = value;
+	});
 
 	const aboutButton = document.createElement('a');
 	aboutButton.href = '#about';
 	aboutButton.addEventListener('click', () => {
 		about();
 	});
-	aboutButton.textContent = 'About';
+	settings.bind<string>('loca.about',(value) => {
+		aboutButton.textContent = value;
+	})
 
 	document.querySelector('nav')!.appendChild(exportButton);
 	document.querySelector('nav')!.appendChild(settingsButton);

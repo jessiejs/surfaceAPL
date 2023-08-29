@@ -11,10 +11,11 @@ import {
 import { Direction, TileType, WallType } from '../SaveCodes/tiles';
 import { createEditor } from './Editor/editor';
 import { loadLevelURL } from './Editor/levelURL';
+import confirm from './IO/confirm';
 import { keyDown, keyUp } from './IO/keyhandlers';
 import prompt from './IO/prompt';
 import select from './IO/select';
-import { getSettings, settings } from './Settings/settings';
+import { SettingsKey, defaults, getSettings, settings } from './Settings/settings';
 import { setupFlow } from './flow';
 
 window.addEventListener('keydown', keyDown);
@@ -63,6 +64,20 @@ if (window.location.pathname == '/level') {
 		customButtons.push(`✨ Setup your flow`);
 	}
 
+	let isSettingsDirty = false;
+	for (const sn in defaults) {
+		const settingName = sn as SettingsKey;
+		if (settingName.startsWith('loca.')) {
+			if (settings.getString(settingName) != defaults[settingName]) {
+				isSettingsDirty = true;
+			}
+		}
+	}
+
+	if (isSettingsDirty) {
+		customButtons.push(`🧹 Reset title settings`);
+	}
+
 	const type = await select('Level', [
 		...customButtons.map(t => ({
 			text: t,
@@ -86,6 +101,27 @@ if (window.location.pathname == '/level') {
 	if (type == '✨ Setup your flow') {
 		await setupFlow();
 		settings.setPref('setup.flow', true);
+		window.location.reload();
+	}
+
+	if (type == '🧹 Reset title settings') {
+		const mappings:string[] = [];
+		for (const sn in defaults) {
+			const settingName = sn as SettingsKey;
+			if (settingName.startsWith('loca.')) {
+				if (settings.getString(settingName) != defaults[settingName]) {
+					mappings.push(`${settings.getString(settingName)} -> ${defaults[settingName]}`);
+				}
+			}
+		}
+		if (await confirm('Are you sure you want to reset your title settings?\n\n' + mappings.join('\n'))) {
+			for (const sn in defaults) {
+				const settingName = sn as SettingsKey;
+				if (settingName.startsWith('loca.')) {
+					settings.setPref(settingName, defaults[settingName]);
+				}
+			}
+		}
 		window.location.reload();
 	}
 

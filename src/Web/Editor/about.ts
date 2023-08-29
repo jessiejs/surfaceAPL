@@ -2,7 +2,7 @@ import createDialog from '../IO/dialog';
 import logoURL from '../../Art/Branding/Wordmark.svg';
 
 export default function () {
-	const { content } = createDialog('About', {
+	const { content } = createDialog('p:loca.about', {
 		buttons: [
 			{
 				text: 'Close',

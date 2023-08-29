@@ -6,14 +6,17 @@ export type SettingsData = {
 
 export type SettingsValue = number | string | boolean;
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow';
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about';
 
-const defaults: Record<SettingsKey, SettingsValue> = {
+export const defaults: Record<SettingsKey, SettingsValue> = {
 	'propertyPicker.style': 'classic',
 	'camera.scaledMotion': true,
 	'camera.speed': 400,
 	'privacy.linkShortener': true,
-	'setup.flow': false
+	'setup.flow': false,
+	'loca.about': 'About',
+	'loca.export': 'Export',
+	'loca.settings': 'Settings',
 };
 
 type Immutable<T> = {
@@ -25,6 +28,7 @@ export type SettingsManager = {
 	getNumber<T extends number>(key: SettingsKey): T;
 	getString<T extends string>(key: SettingsKey): T;
 	getBoolean<T extends boolean>(key: SettingsKey): T;
+	bind<T extends SettingsValue>(key: SettingsKey, handler: (value: T, key: SettingsKey) => void): void;
 };
 
 export const settings = getSettings();
@@ -59,11 +63,16 @@ export function getSettings(): SettingsManager {
 		return data.kv[key] as T;
 	};
 
+	const settingsHandlers:Record<SettingsKey,((value:SettingsValue,key:SettingsKey)=>void)[]> = Object.fromEntries(Object.keys(defaults).map(k => [k,[]])) as any;
+
 	return {
 		setPref(key, value) {
 			data.kv[key] = value;
 			console.log(`[settings]: saving ${value} to ${key}`);
 			localStorage.setItem('settings', JSON.stringify(data));
+			for (const handler of settingsHandlers[key]) {
+				handler(value, key);
+			}
 		},
 		getNumber<T extends number>(key: SettingsKey) {
 			const value = getPref(key);
@@ -85,12 +94,16 @@ export function getSettings(): SettingsManager {
 				throw `[settings]: ${key} is not a boolean`;
 			}
 			return value as T;
+		},
+		bind<T>(key: SettingsKey, handler: (value: T, key: SettingsKey) => void) {
+			settingsHandlers[key].push(handler as any);
+			handler(data.kv[key] as T, key);
 		}
 	};
 }
 
 export function showSettingsWindow() {
-	const { content } = createDialog('⚙ Settings', {
+	const { content } = createDialog('p:loca.settings', {
 		buttons: [
 			{
 				text: 'Close',
@@ -118,6 +131,9 @@ export function showSettingsWindow() {
 		['camera.speed', 'Camera Speed', 'number'],
 		['privacy.linkShortener', 'Use Link Shortener', 'tickbox'],
 		['setup.flow', 'Completed flow setup', 'tickbox'],
+		['loca.about', 'About Title', 'text'],
+		['loca.export', 'Export Title', 'text'],
+		['loca.settings', 'Settings Title', 'text'],
 	];
 
 	for (const [key, title, type, data] of options) {
@@ -173,7 +189,7 @@ export function showSettingsWindow() {
 					const elm = document.createElement('input');
 					elm.type = 'text';
 					elm.value = settings.getString(key);
-					elm.onchange = () => {
+					elm.oninput = () => {
 						settings.setPref(key, elm.value);
 					};
 					input = elm;
