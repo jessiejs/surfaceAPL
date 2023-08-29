@@ -1,4 +1,5 @@
 import { IdToString, mask, TileType } from '../../SaveCodes/tiles';
+import { settings } from '../Settings/settings';
 import { transformWorldCoordinatesToCameraCoordinates } from './coordinates';
 import { Camera } from './editor';
 import transforms from './RenderData/transforms.json';
@@ -42,6 +43,7 @@ export function drawTile({
 	superPain,
 	data,
 	drawImg,
+	time
 }: {
 	ctx: CanvasRenderingContext2D;
 	src: string;
@@ -54,8 +56,17 @@ export function drawTile({
 	superPain?: boolean;
 	data?: string;
 	drawImg: boolean;
+	time: number
 }) {
-	const img = lazyload(src);
+	let img = lazyload(src);
+
+	if (settings.getBoolean('ff.ANIMATED_FLAGS')) {
+		if (id == TileType.Checkpoint2 || id == TileType.End1) {
+			let newId = id;
+			newId += Math.abs((Math.floor(time * 5) % 8) - 3); // ew, but it's technically correct
+			img = lazyload(`/Textures/BG/${IdToString[newId].toLowerCase()}.svg`);
+		}
+	}
 
 	if (img) {
 		const realRotation = (rotationInAppelDegrees - 1) * 90;

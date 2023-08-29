@@ -7,7 +7,7 @@ export type SettingsData = {
 export type SettingsValue = number | string | boolean;
 
 export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}`;
-export type FlagName = 'WALL_EDITING' | 'PROPERTY_VISUAL_EDITOR';
+export type FlagName = 'WALL_EDITING' | 'PROPERTY_VISUAL_EDITOR' | 'ANIMATED_FLAGS';
 
 export const defaults: Record<SettingsKey, SettingsValue> = {
 	'propertyPicker.style': 'classic',
@@ -22,6 +22,7 @@ export const defaults: Record<SettingsKey, SettingsValue> = {
 	'flags.divergent': false,
 	'ff.WALL_EDITING': false,
 	'ff.PROPERTY_VISUAL_EDITOR': false,
+	'ff.ANIMATED_FLAGS': false,
 };
 
 type Immutable<T> = {

@@ -313,6 +313,7 @@ export function createEditor(level: Level): Editor {
 						hue: level.hue2,
 						id: level.tiles[i].id,
 						drawImg: true,
+						time
 					});
 			}
 
@@ -335,6 +336,7 @@ export function createEditor(level: Level): Editor {
 						id: level.tiles[i].id,
 						superPain: disableHueRendering,
 						drawImg: true,
+						time
 					});
 			}
 
@@ -380,7 +382,8 @@ export function createEditor(level: Level): Editor {
 						superPain: disableHueRendering,
 						data: level.tiles[i].data,
 						drawImg: false,
-					});
+						time
+					}); //TODO: FIXME, we shouldn't use drawTile for drawing the data bubble, that's just fucking stupid
 			}
 
 			// update the selection
