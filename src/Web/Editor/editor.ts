@@ -157,7 +157,9 @@ export function createEditor(level: Level): Editor {
 	const settingsButton = document.createElement('a');
 	settingsButton.href = '#settings';
 	settingsButton.addEventListener('click', () => {
-		showSettingsWindow();
+		showSettingsWindow({
+			showFlags: keysDown.includes('KeyF')
+		});
 	});
 	settings.bind<string>('loca.settings',(value) => {
 		settingsButton.textContent = value;
@@ -457,7 +459,9 @@ export function createEditor(level: Level): Editor {
 				}
 			}
 			if (behaviour.editStyle == 'settings') {
-				showSettingsWindow();
+				showSettingsWindow({
+					showFlags: keysDown.includes('KeyF')
+				});
 			}
 
 			// temp magic

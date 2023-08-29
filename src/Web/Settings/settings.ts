@@ -6,7 +6,8 @@ export type SettingsData = {
 
 export type SettingsValue = number | string | boolean;
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo';
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}`;
+export type FlagName = 'WALL_EDITING' | 'PROPERTY_VISUAL_EDITOR';
 
 export const defaults: Record<SettingsKey, SettingsValue> = {
 	'propertyPicker.style': 'classic',
@@ -18,6 +19,9 @@ export const defaults: Record<SettingsKey, SettingsValue> = {
 	'loca.export': 'Export',
 	'loca.settings': 'Settings',
 	'settings.showDeveloperInfo': false,
+	'flags.divergent': false,
+	'ff.WALL_EDITING': false,
+	'ff.PROPERTY_VISUAL_EDITOR': false,
 };
 
 type Immutable<T> = {
@@ -103,7 +107,7 @@ export function getSettings(): SettingsManager {
 	};
 }
 
-export function showSettingsWindow() {
+export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 	const { content } = createDialog('p:loca.settings', {
 		buttons: [
 			{
@@ -113,7 +117,17 @@ export function showSettingsWindow() {
 		],
 	});
 
-	const options: (
+	let flagInfoVisibility: "hidden" | "toggleable" | "all" = "toggleable";
+
+	if (settings.getBoolean('flags.divergent')) {
+		flagInfoVisibility = "all";
+	}
+
+	if (!showFlags) {
+		flagInfoVisibility = "hidden";
+	}
+
+	let options: (
 		| [SettingsKey, string, 'text']
 		| [SettingsKey, string, 'number']
 		| [SettingsKey, string, 'tickbox']
@@ -137,6 +151,22 @@ export function showSettingsWindow() {
 		['loca.settings', 'Settings Title', 'text'],
 		['settings.showDeveloperInfo', 'Show internal setting names', 'tickbox'],
 	];
+
+	if (flagInfoVisibility == "toggleable" || flagInfoVisibility == "all") {
+		options.push([
+			'flags.divergent',
+			'Allow Flag Modifications',
+			'tickbox',
+		]);
+	}
+
+	if (flagInfoVisibility == "all") {
+		for (const pref in defaults) {
+			if (pref.startsWith('ff.')) {
+				options.push([pref as SettingsKey, pref, 'tickbox']);
+			}
+		}
+	}
 
 	for (const [key, title, type, data] of options) {
 		const row = document.createElement('label');
