@@ -16,6 +16,7 @@ import {
 	mainLevelCodeToOpenCode,
 } from '../../SaveCodes/saveload';
 import copy from '../IO/copy';
+import { settings } from '../Settings/settings';
 
 export function createSidebar(
 	level: Level,
@@ -251,6 +252,16 @@ export function createSidebar(
 
 				if (mask[tile - 1].isAccessible) {
 					img.classList.add('accessible');
+				}
+
+				if (mask[tile - 1].showWhen == 'modern-property-picker') {
+					settings.bind('propertyPicker.style', (value) => {
+						if (value == 'batch') {
+							tileElm.style.display = 'block';
+						} else {
+							tileElm.style.display = 'none';
+						}
+					});
 				}
 
 				tileElm.appendChild(img);

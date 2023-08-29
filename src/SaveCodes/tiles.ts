@@ -291,20 +291,20 @@ export let mask = `
 	doHue: l[mask_hue] == 'h',
 	category: Number(l[mask_category]) - 1,
 	isAccessible: false
-})) as { doHue: boolean, category?: number, isAccessible: boolean }[];
+})) as { doHue: boolean, category?: number, isAccessible: boolean, showWhen?: 'modern-property-picker' }[];
 
-if (propertyPickerStyle == 'batch') {
-	mask[TileType.PropertyGrab - 1] = {
-		category: 6,
-		doHue: false,
-		isAccessible: true
-	};
-	mask[TileType.PropertyPut - 1] = {
-		category: 6,
-		doHue: false,
-		isAccessible: true
-	};	
-}
+mask[TileType.PropertyGrab - 1] = {
+	category: 6,
+	doHue: false,
+	isAccessible: true,
+	showWhen: 'modern-property-picker'
+};
+mask[TileType.PropertyPut - 1] = {
+	category: 6,
+	doHue: false,
+	isAccessible: true,
+	showWhen: 'modern-property-picker'
+};
 
 mask[TileType.PropertyEdit - 1] = {
 	category: 6,
