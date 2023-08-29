@@ -144,13 +144,6 @@ export function createEditor(level: Level): Editor {
 	});
 	exportButton.textContent = 'Export';
 
-	const aboutButton = document.createElement('a');
-	aboutButton.href = '#about';
-	aboutButton.addEventListener('click', () => {
-		about();
-	});
-	aboutButton.textContent = 'About';
-
 	const settingsButton = document.createElement('a');
 	settingsButton.href = '#settings';
 	settingsButton.addEventListener('click', () => {
@@ -158,9 +151,16 @@ export function createEditor(level: Level): Editor {
 	});
 	settingsButton.textContent = 'Settings';
 
+	const aboutButton = document.createElement('a');
+	aboutButton.href = '#about';
+	aboutButton.addEventListener('click', () => {
+		about();
+	});
+	aboutButton.textContent = 'About';
+
 	document.querySelector('nav')!.appendChild(exportButton);
-	document.querySelector('nav')!.appendChild(aboutButton);
 	document.querySelector('nav')!.appendChild(settingsButton);
+	document.querySelector('nav')!.appendChild(aboutButton);
 
 	let data: string = '';
 	let lastNonTemporaryID = -1;
