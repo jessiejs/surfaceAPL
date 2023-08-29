@@ -10,6 +10,7 @@ import {
 } from '../SaveCodes/saveload';
 import { Direction, TileType, WallType } from '../SaveCodes/tiles';
 import { createEditor } from './Editor/editor';
+import { showErrorScreen } from './Editor/errorHandler';
 import { loadLevelURL } from './Editor/levelURL';
 import confirm from './IO/confirm';
 import { keyDown, keyUp } from './IO/keyhandlers';
@@ -223,7 +224,21 @@ if (window.location.pathname == '/level') {
 		const time = await waitFrame();
 		const delta = Math.min((time - pTime) / 1000, 1 / 20);
 		pTime = time;
-		await editor.tick(delta);
+		try {
+			await editor.tick(delta);
+		} catch (e: any) {
+			const error = e as Error;
+			let text = ``;
+			if (error.message) {
+				text += `${error.constructor.name}: ${error.message}`;
+			} else {
+				text += `${e}\n`;
+			}
+			if (error.stack) {
+				text += `\n\nTrace:\n${error.stack}\n`;
+			}
+			showErrorScreen(document.querySelector('canvas')!.getContext('2d')!,text);
+		}
 	}
 
 	editor.destroy();

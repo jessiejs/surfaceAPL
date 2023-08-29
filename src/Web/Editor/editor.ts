@@ -108,9 +108,17 @@ export function createEditor(level: Level): Editor {
 		];
 	}
 
+	let deathProgress = 0;
+	let deathKeys = ['KeyD','KeyI','KeyE'];
+
 	function keyDownEventHandler(event: KeyboardEvent) {
 		if (!keysDown.includes(event.code)) {
 			keysDown.push(event.code);
+		}
+		if (deathKeys[deathProgress] == event.code) {
+			deathProgress++;
+		} else {
+			deathProgress = 0;
 		}
 	}
 
@@ -187,6 +195,11 @@ export function createEditor(level: Level): Editor {
 	return {
 		async tick(deltaTime: number) {
 			behaviour = getBehaviour(tool.id, tool.rotation);
+
+			// intentional crash
+			if (deathProgress == 3) {
+				throw new Error(`Pressing D, I, E crashes (intentional)`);
+			}
 
 			// floatbars
 			starVisible(behaviour.editStyle == 'starzone');
