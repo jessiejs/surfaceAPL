@@ -29,6 +29,17 @@ const textureOffsets = {
 	'/textures/bg/costume3.svg': [0.25, 0.25],
 	'/textures/icons/costume3.svg': [0.25, 0.25],
 	'/textures/bg/spring2.svg': [0, 0.26],
+	'/textures/fg/crumble0010.svg': [-0.25, -0.25],
+	'/textures/icons/crumble0010.svg': [-0.25, -0.25],
+	'/textures/fg/lift2x2.svg': [0,-0.25],
+	'/textures/bg/lift2x2.svg': [0,-0.25],
+	'/textures/icons/lift2x2.svg': [0,-0.25],
+	'/textures/fg/lift2x3.svg': [0,-0.25],
+	'/textures/bg/lift2x3.svg': [0,-0.25],
+	'/textures/icons/lift2x3.svg': [0,-0.25],
+	'/textures/fg/lock02.svg': [-0.25, 0],
+	'/textures/bg/lock02.svg': [-0.25, 0],
+	'/textures/icons/lock02.svg': [-0.25, 0],
 };
 
 export function drawTile({
