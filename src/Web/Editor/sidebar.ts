@@ -255,7 +255,7 @@ export function createSidebar(
 				}
 
 				if (mask[tile - 1].showWhen == 'modern-property-picker') {
-					settings.bind('propertyPicker.style', (value) => {
+					settings.bind<"classic" | "batch">('propertyPicker.style', (value) => {
 						if (value == 'batch') {
 							tileElm.style.display = 'block';
 						} else {

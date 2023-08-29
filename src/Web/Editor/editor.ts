@@ -89,6 +89,14 @@ export function createEditor(level: Level): Editor {
 	let keysDown: string[] = [];
 	let solidFPSTime = 0;
 
+	settings.bind<'classic' | 'batch'>('propertyPicker.style', (value) => {
+		if (value == 'batch') {
+			if (tool.id == TileType.PropertyEdit) {
+				tool.id = TileType.PropertyGrab;
+			}
+		}
+	})
+
 	updateSidebar(tool);
 
 	function mouseMoveEventHandler(event: MouseEvent) {
