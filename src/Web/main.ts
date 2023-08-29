@@ -238,6 +238,7 @@ if (window.location.pathname == '/level') {
 				text += `\n\nTrace:\n${error.stack}\n`;
 			}
 			showErrorScreen(document.querySelector('canvas')!.getContext('2d')!,text);
+			throw e;
 		}
 	}
 
