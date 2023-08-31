@@ -31,7 +31,7 @@ import { SettingsManager, settings, showSettingsWindow } from '../Settings/setti
 import { createStarfloat } from './floatbar';
 
 export interface Editor {
-	tick(deltatime: number): void;
+	tick(deltatime: number): Promise<void>;
 
 	destroy(): void;
 }

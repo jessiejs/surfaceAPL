@@ -225,7 +225,19 @@ if (window.location.pathname == '/level') {
 		const delta = Math.min((time - pTime) / 1000, 1 / 20);
 		pTime = time;
 		try {
-			await editor.tick(delta);
+			const p = new Promise((resolve)=>{
+				let r = false;
+				editor.tick(delta).then(()=>{
+					resolve(null);
+					r = true;
+				});
+				setTimeout(()=>{
+					if (!r) {
+						showErrorScreen(document.querySelector('canvas')!.getContext('2d')!,`It looks like the editor ran into an unending halt, we're so sorry! 😅`);
+					}
+				}, 1000);
+			});
+			await p;
 		} catch (e: any) {
 			const error = e as Error;
 			let text = ``;

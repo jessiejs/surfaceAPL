@@ -508,7 +508,3 @@ dialog:has(.confetti) {
 	flex-grow: 1;
 	aspect-ratio: 1 / 1;
 }
-
-body:has(.floatbar:not(.hidden)) > .app {
-	//right: 420px;
-}
