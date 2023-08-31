@@ -10,26 +10,6 @@ body {
 	transition: --gap-small 0.2s, --gap-medium 0.2s, --gap-large 0.2s, --settings-row-height 0.2s;
 }
 
-@property --gap-small {
-	syntax: '<integer>';
-	inherits: true;
-}
-
-@property --gap-medium {
-	syntax: '<integer>';
-	inherits: true;
-}
-
-@property --gap-large {
-	syntax: '<integer>';
-	inherits: true;
-}
-
-@property --settings-row-height {
-	syntax: '<integer>';
-	inherits: true;
-}
-
 body.compact {
 	--gap-small: 3px;
 	--gap-medium: 5px;
@@ -286,7 +266,7 @@ h6 {
 }
 
 button {
-	padding: var(--gap-small) var(--gap-large);
+	padding: var(--gap-small) var(--gap-medium);
 	border-radius: 5px;
 	border: 1px solid $raisedBorder;
 	background-color: $raise;
