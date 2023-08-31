@@ -485,12 +485,28 @@ dialog:has(.confetti) {
 
 	> .content {
 		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 }
 
 .floatbar.hidden {
 	right: -10px;
 	transform: translateX(100%);
+}
+
+.hue-strip {
+	display: flex;
+	flex-direction: row;
+	gap: 2px;
+	align-items: center;
+	justify-content: stretch;
+}
+
+.hue-strip > * {
+	flex-grow: 1;
+	aspect-ratio: 1 / 1;
 }
 
 body:has(.floatbar:not(.hidden)) > .app {

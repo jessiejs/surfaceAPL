@@ -190,7 +190,7 @@ export function createEditor(level: Level): Editor {
 	let data: string = '';
 	let lastNonTemporaryID = -1;
 
-	const { visible: starVisible } = createStarfloat();
+	const { visible: starVisible } = createStarfloat(level);
 
 	return {
 		async tick(deltaTime: number) {
