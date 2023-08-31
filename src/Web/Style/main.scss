@@ -1,6 +1,42 @@
 @import 'https://fonts.googleapis.com/css?family=Inter:400,600,700|Chivo+Mono';
 @import './color.scss';
 
+body {
+	--gap-small: 5px;
+	--gap-medium: 10px;
+	--gap-large: 15px;
+	--settings-row-height: 50px;
+
+	transition: --gap-small 0.2s, --gap-medium 0.2s, --gap-large 0.2s, --settings-row-height 0.2s;
+}
+
+@property --gap-small {
+	syntax: '<integer>';
+	inherits: true;
+}
+
+@property --gap-medium {
+	syntax: '<integer>';
+	inherits: true;
+}
+
+@property --gap-large {
+	syntax: '<integer>';
+	inherits: true;
+}
+
+@property --settings-row-height {
+	syntax: '<integer>';
+	inherits: true;
+}
+
+body.compact {
+	--gap-small: 3px;
+	--gap-medium: 5px;
+	--gap-large: 7px;
+	--settings-row-height: 35px;
+}
+
 @mixin WidgetButtonHover {
 	background-color: $accent !important;
 }
@@ -101,7 +137,7 @@ nav {
 	flex-direction: row;
 	align-items: center;
 	padding: 12px;
-	gap: 15px;
+	gap: var(--gap-large);
 	font-size: 15px;
 	height: 49px;
 }
@@ -168,7 +204,7 @@ dialog {
 		padding: 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 5px;
+		gap: var(--gap-small);
 		align-items: flex-start;
 
 		> .error {
@@ -188,6 +224,7 @@ dialog {
 	> .content:not(:has(.qr)) {
 		max-height: 300px;
 		overflow: hidden auto;
+		transition: max-height 1s;
 	}
 
 	> .submit-bar {
@@ -196,12 +233,21 @@ dialog {
 		align-items: center;
 		justify-content: flex-end;
 		padding: 10px;
-		gap: 5px;
+		gap: var(--gap-small);
 		background-color: $bg-2;
 		border-top: 1px solid $subtle-divider;
 	}
 
 	animation: dialogOpen 0.2s;
+	transition: margin-top 1s, width 1s;
+}
+
+dialog.pro-size {
+	margin-top: 50px !important;
+	width: calc(100vw - 100px);
+	> .content:not(:has(.qr)) {
+		max-height: 90vh;
+	}
 }
 
 @keyframes dialogOpen {
@@ -240,7 +286,7 @@ h6 {
 }
 
 button {
-	padding: 5px 10px;
+	padding: var(--gap-small) var(--gap-large);
 	border-radius: 5px;
 	border: 1px solid $raisedBorder;
 	background-color: $raise;
@@ -266,7 +312,7 @@ label {
 	display: flex;
 	flex-direction: column;
 	font-family: Renogare;
-	gap: 5px;
+	gap: var(--gap-small);
 	font-size: 14px;
 	width: 100%;
 }
@@ -301,7 +347,7 @@ textarea {
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
-	padding: 10px 20px;
+	padding: var(--gap-large) calc(var(--gap-large) * 1.5);
 	font-family: 'Inter';
 	user-select: none;
 	font-size: 15px;
@@ -312,7 +358,7 @@ textarea {
 	> input[type=checkbox] {
 		width: min-content;
 	}
-	height: 50px;
+	height: var(--settings-row-height);
 	border-top: 1px solid $raisedBorder;
 }
 
@@ -332,14 +378,14 @@ aside {
 	display: flex;
 	flex-direction: column;
 
-	gap: 5px;
+	gap: var(--gap-small);
 
 	> .row {
 		display: flex;
 		flex-direction: row;
-		gap: 5px;
+		gap: var(--gap-small);
 		flex-wrap: wrap;
-		padding: 5px;
+		padding: var(--gap-small);
 		border-radius: 10px;
 		background-color: $deep-inset;
 		width: 335px;
@@ -352,7 +398,7 @@ aside {
 		> .widget:has(button) {
 			display: grid;
 			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-			gap: 5px;
+			gap: var(--gap-small);
 
 			> button {
 				width: 100%;
@@ -458,10 +504,10 @@ dialog:has(.confetti) {
 
 	transition: right 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
-	padding: 10px;
+	padding: var(--gap-large);
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: var(--gap-medium);
 
 	> header {
 		display: flex;
@@ -487,7 +533,7 @@ dialog:has(.confetti) {
 		flex-grow: 1;
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: var(--gap-medium);
 	}
 }
 
@@ -507,4 +553,15 @@ dialog:has(.confetti) {
 .hue-strip > * {
 	flex-grow: 1;
 	aspect-ratio: 1 / 1;
+}
+
+.category-row {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: $background !important;
+	> label {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
+	height: min-content;
 }

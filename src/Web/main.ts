@@ -27,6 +27,15 @@ if (window.location.pathname == '/level') {
 }
 
 (async () => {
+	// compact mode
+	settings.bind<"comfy" | "compact">('ui.scale', value => {
+		if (value == 'compact') {
+			document.body.classList.add('compact');
+		} else {
+			document.body.classList.remove('compact');
+		}
+	})
+
 	// confirm
 	if (settings.getBoolean('flags.divergent')) {
 		if (!(await confirm(`Flag divergence is enabled. This can cause extreme bugs, and possible corruption of levels. Continue?`))) {
@@ -235,7 +244,7 @@ if (window.location.pathname == '/level') {
 					if (!r) {
 						showErrorScreen(document.querySelector('canvas')!.getContext('2d')!,`It looks like the editor ran into an unending halt, we're so sorry! 😅`);
 					}
-				}, 1000);
+				}, 7000);
 			});
 			await p;
 		} catch (e: any) {

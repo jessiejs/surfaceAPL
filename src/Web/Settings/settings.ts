@@ -6,7 +6,7 @@ export type SettingsData = {
 
 export type SettingsValue = number | string | boolean;
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}`;
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}` | 'pro.enabled' | 'ui.scale';
 export type FlagName = 'WALL_EDITING' | 'PROPERTY_VISUAL_EDITOR' | 'ANIMATED_FLAGS' | 'STAR_TOOL';
 
 export const defaults: Record<SettingsKey, SettingsValue> = {
@@ -24,6 +24,8 @@ export const defaults: Record<SettingsKey, SettingsValue> = {
 	'ff.PROPERTY_VISUAL_EDITOR': false,
 	'ff.ANIMATED_FLAGS': false,
 	'ff.STAR_TOOL': false,
+	'pro.enabled': false,
+	"ui.scale": 'comfy'
 };
 
 type Immutable<T> = {
@@ -109,8 +111,10 @@ export function getSettings(): SettingsManager {
 	};
 }
 
+const proKeys:SettingsKey[] = ['ui.scale'];
+
 export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
-	const { content } = createDialog('p:loca.settings', {
+	const { content, dialog } = createDialog('p:loca.settings', {
 		buttons: [
 			{
 				text: 'Close',
@@ -118,6 +122,14 @@ export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 			},
 		],
 	});
+
+	settings.bind<boolean>('pro.enabled', (v)=>{
+		if (v) {
+			dialog.classList.add('pro-size');
+		} else {
+			dialog.classList.remove('pro-size');
+		}
+	})
 
 	let flagInfoVisibility: "hidden" | "toggleable" | "all" = "toggleable";
 
@@ -134,7 +146,9 @@ export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 		| [SettingsKey, string, 'number']
 		| [SettingsKey, string, 'tickbox']
 		| [SettingsKey, string, 'select', Record<string, string>]
+		| ['category', string]
 	)[] = [
+		['category','Common'],
 		[
 			'propertyPicker.style',
 			'Property Picker Style',
@@ -144,14 +158,23 @@ export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 				Modern: 'batch',
 			},
 		],
+		['ui.scale', 'UI Scale', 'select', {
+			Comfy: 'comfy',
+			Compact: 'compact',
+		}],
+		['category','Privacy'],
+		['privacy.linkShortener', 'Use Link Shortener', 'tickbox'],
+		['category', 'Camera'],
 		['camera.scaledMotion', 'Magic Panning', 'tickbox'],
 		['camera.speed', 'Camera Speed', 'number'],
-		['privacy.linkShortener', 'Use Link Shortener', 'tickbox'],
-		['setup.flow', 'Completed flow setup', 'tickbox'],
+		['category', 'Localization'],
 		['loca.about', 'About Title', 'text'],
 		['loca.export', 'Export Title', 'text'],
 		['loca.settings', 'Settings Title', 'text'],
+		['category', 'Advanced'],
 		['settings.showDeveloperInfo', 'Show internal setting names', 'tickbox'],
+		['pro.enabled', 'Pro Mode', 'tickbox'],
+		['setup.flow', 'Completed flow setup', 'tickbox']
 	];
 
 	if (flagInfoVisibility == "toggleable" || flagInfoVisibility == "all") {
@@ -174,6 +197,15 @@ export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 		const row = document.createElement('label');
 		row.classList.add('settings-row');
 
+		if (key == 'category') {
+			row.classList.add('category-row');
+			const text = document.createElement('label');
+			text.textContent = title;
+			row.appendChild(text);
+			content.appendChild(row);
+			continue;
+		}
+
 		const label = document.createElement('span');
 		label.textContent = title;
 
@@ -183,6 +215,11 @@ export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 		settings.bind<boolean>('settings.showDeveloperInfo', (value) => {
 			subtleLabel.style.display = value ? 'inline' : 'none';
 		});
+		if (proKeys.includes(key)) {
+			settings.bind<boolean>('pro.enabled', (value) => {
+				row.style.display = value ? 'flex' : 'none';
+			})
+		}
 
 		label.appendChild(subtleLabel);
 

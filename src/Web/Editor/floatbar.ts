@@ -123,7 +123,7 @@ export function createStarfloat(level:Level) {
 							downRight.id = TileType.Green1111;
 						}
 
-						const grassIds = [TileType.Green1111,TileType.Green2,TileType.Spike0909,TileType.Spike0099,TileType.Saw3,TileType.Green1111b,TileType.Green6,TileType.Green7];
+						const grassIds = [TileType.Green1111,TileType.Green2,TileType.Spike0909,TileType.Spike0099,TileType.Saw3,TileType.Green1111b];
 						const probabilities = {
 							[TileType.Green1111]: 3,
 							[TileType.Green2]: 0,
@@ -131,8 +131,8 @@ export function createStarfloat(level:Level) {
 							[TileType.Spike0099]: 0.2,
 							[TileType.Saw3]: 0.2,
 							[TileType.Green1111b]: 0.3,
-							[TileType.Green6]: 0.1,
-							[TileType.Green7]: 0.1
+							//[TileType.Green6]: 0.1,
+							//[TileType.Green7]: 0.1
 						};
 
 						if (grassIds.includes(tile.id)) {
