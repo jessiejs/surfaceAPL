@@ -22,6 +22,8 @@ const textureOffsets = {
 	'/textures/fg/moba.svg': [0, 0.25],
 	'/textures/fg/worma2.svg': [0, 0.25],
 	'/textures/icons/worma2.svg': [0, 0.25],
+	'/textures/fg/worma.svg': [0, 0.25],
+	'/textures/icons/worma.svg': [0, 0.25],
 	'/textures/fg/costume2.svg': [-0.25, 0.25],
 	'/textures/bg/costume2.svg': [-0.25, 0.25],
 	'/textures/icons/costume2.svg': [-0.25, 0.25],
