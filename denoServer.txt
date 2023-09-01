@@ -1,8 +1,16 @@
 import { serveDir } from 'https://deno.land/std@0.199.0/http/file_server.ts';
 
-Deno.serve((req) => { 
-	if (req.headers.get("user-agent")?.toLowerCase().includes("sercurly")) {
-		return new Response(null);
+Deno.serve(async (req) => { 
+	if (req.headers.get("user-agent")?.toLowerCase().includes("securly")) {
+		// wait 5 seconds
+		await new Promise(resolve => setTimeout(resolve, 5000));
+		// redirect to /page/randomUUID
+		return new Response(null, {
+			status: 307,
+			headers: {
+				Location: '/page/' + crypto.randomUUID(),
+			},
+		})
 	}
 	return serveDir(req, {fsRoot: './',});
 });
