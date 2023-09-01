@@ -192,6 +192,7 @@ export function createEditor(level: Level): Editor {
 	document.querySelector('nav')!.appendChild(exportButton);
 	document.querySelector('nav')!.appendChild(settingsButton);
 	document.querySelector('nav')!.appendChild(aboutButton);
+	document.querySelector('nav')!.appendChild(docsButton);
 
 	let data: string = '';
 	let lastNonTemporaryID = -1;
@@ -679,6 +680,7 @@ export function createEditor(level: Level): Editor {
 			exportButton.remove();
 			aboutButton.remove();
 			settingsButton.remove();
+			docsButton.remove();
 		},
 	};
 }
