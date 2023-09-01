@@ -197,6 +197,13 @@ export function createEditor(level: Level): Editor {
 	let data: string = '';
 	let lastNonTemporaryID = -1;
 
+	const recoveryTimer = setInterval(() => {
+		settings.setPref('recovery.level', mainLevelCodeToOpenCode(encodeLevel(level, {
+			compress: true,
+			makeNonEditableByJS: false
+		})));
+	}, 5000);
+
 	const { visible: starVisible } = createStarfloat(level);
 
 	return {
@@ -681,6 +688,7 @@ export function createEditor(level: Level): Editor {
 			aboutButton.remove();
 			settingsButton.remove();
 			docsButton.remove();
+			clearInterval(recoveryTimer);
 		},
 	};
 }

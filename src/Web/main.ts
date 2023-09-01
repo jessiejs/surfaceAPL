@@ -95,6 +95,10 @@ if (window.location.pathname == '/level') {
 		customButtons.push(`✨ Setup your flow`);
 	}
 
+	if (settings.getString('recovery.level') != '') {
+		customButtons.push(`🛠 Edit last level`);
+	}
+
 	let isSettingsDirty = false;
 	for (const sn in defaults) {
 		const settingName = sn as SettingsKey;
@@ -133,6 +137,10 @@ if (window.location.pathname == '/level') {
 		await setupFlow();
 		settings.setPref('setup.flow', true);
 		window.location.reload();
+	}
+
+	if (type == '🛠 Edit last level') {
+		levelCode = settings.getString('recovery.level');
 	}
 
 	if (type == '🧹 Reset title settings') {
