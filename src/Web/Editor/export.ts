@@ -11,6 +11,7 @@ import QRCode from 'qrcode';
 import GZip from 'gzip-js';
 import confirm from '../IO/confirm';
 import { settings } from '../Settings/settings';
+import { set } from 'gotiny';
 
 async function bufferToBase64(buffer: Uint8Array) {
 	// use a FileReader to generate a base64 data URI:
@@ -38,11 +39,7 @@ export async function share(level: Level) {
 	if (
 		settings.getBoolean('privacy.linkShortener')
 	) {
-		let result = (await fetch('https://gotiny.cc/api', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ input: url }),
-		}).then(res => res.json())) as { code?: string }[];
+		const result = await set(url);
 
 		if (!result[0]?.code) {
 			await alert(`It looks like we couldn't host your level.`);
