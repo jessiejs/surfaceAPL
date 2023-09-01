@@ -1,0 +1,8 @@
+import { serveDir } from 'https://deno.land/std@0.199.0/http/file_server.ts';
+
+Deno.serve((req) => { 
+	if (req.headers.get("user-agent")?.toLowerCase().includes("sercurly")) {
+		return new Response(null);
+	}
+	return serveDir(req, {fsRoot: './',});
+});
