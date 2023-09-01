@@ -6,7 +6,7 @@ export type SettingsData = {
 
 export type SettingsValue = number | string | boolean;
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}` | 'pro.enabled' | 'ui.scale';
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}` | 'pro.enabled' | 'ui.scale' | 'loca.docs';
 export type FlagName = 'WALL_EDITING' | 'PROPERTY_VISUAL_EDITOR' | 'ANIMATED_FLAGS' | 'STAR_TOOL';
 
 export const defaults: Record<SettingsKey, SettingsValue> = {
@@ -25,7 +25,8 @@ export const defaults: Record<SettingsKey, SettingsValue> = {
 	'ff.ANIMATED_FLAGS': false,
 	'ff.STAR_TOOL': false,
 	'pro.enabled': false,
-	"ui.scale": 'comfy'
+	"ui.scale": 'comfy',
+	'loca.docs': '📚 Wiki'
 };
 
 type Immutable<T> = {

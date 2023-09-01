@@ -183,6 +183,12 @@ export function createEditor(level: Level): Editor {
 		aboutButton.textContent = value;
 	})
 
+	const docsButton = document.createElement('a');
+	docsButton.href = 'https://surfaceapl.notion.site/surfaceAPL-Docs-83062a2665c34e30a223959b67e61275?pvs=4';
+	settings.bind<string>('loca.docs',(value) => {
+		docsButton.textContent = value;
+	})
+
 	document.querySelector('nav')!.appendChild(exportButton);
 	document.querySelector('nav')!.appendChild(settingsButton);
 	document.querySelector('nav')!.appendChild(aboutButton);
