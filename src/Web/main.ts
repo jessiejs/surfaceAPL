@@ -29,9 +29,11 @@ window.addEventListener('keyup', keyUp);
 (async () => {
 	if (window.location.pathname == '/level') {
 		await loadLevelURL();
+		return;
 	}
 	if (window.location.pathname == '/plugin') {
 		await showInstallPluginUI();
+		return;
 	}
 
 	// compact mode
