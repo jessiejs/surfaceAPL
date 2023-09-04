@@ -5,36 +5,37 @@ import { buildLockedFunction } from "./Lockbox/LockedFunction";
 import { PluginData, PluginTable } from "./data";
 import { PluginMetadata } from "./installUI";
 
-export const privateSymbol = Symbol('surfaceAPL plugin private symbol');
-export type PluginInternal = typeof privateSymbol;
-
 export type APIVersion = '1' | 1;
 
 export type UIElement<T extends Record<string,any>> = {
 	[key in keyof T]: ((value: T[key]) => void) & {
 		value: () => T[key];
 	};
-} & {
-	[privateSymbol]: {
-		element: HTMLElement;
-	}
 };
+
+export const { getLockdownDBItem, setLockdownDBItem } = (() => {
+	const lockdownDB = new WeakMap<any, any>();
+
+	return {
+		getLockdownDBItem<T>(key:any):T | undefined {
+			return lockdownDB.get(key) as T;
+		},
+		setLockdownDBItem(key:any, value:any) {
+			lockdownDB.set(key, value);
+		}
+	}
+})();
 
 export function createUIElement<T extends Record<string,any>>(gs:{
 	[key in keyof T]: {
 		getter: () => T[key];
 		setter: (value:T[key]) => void;
-	}
+	} 
 }, elm:HTMLElement):UIElement<T> {
 	const out = {
 	} as UIElement<T>;
 
-	Object.defineProperty(out, privateSymbol, {
-		enumerable: false,
-		value: {
-			element: elm
-		}
-	})
+	setLockdownDBItem(out, elm);
 
 	for (const key in gs) {
 		out[key] = ((value:T[typeof key]) => {
