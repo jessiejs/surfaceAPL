@@ -1,5 +1,5 @@
-const { log, dialog } = getAPI(1);
+const { log, dialog, ui } = getAPI(1);
 const { prompt } = dialog;
+const { button } = ui;
 
-await prompt('Die');
-log.log('yas');
+log.obj(button().text('pog'));

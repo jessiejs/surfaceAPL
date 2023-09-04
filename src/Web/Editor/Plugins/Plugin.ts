@@ -5,7 +5,86 @@ import { buildLockedFunction } from "./Lockbox/LockedFunction";
 import { PluginData, PluginTable } from "./data";
 import { PluginMetadata } from "./installUI";
 
+export const privateSymbol = Symbol('surfaceAPL plugin private symbol');
+export type PluginInternal = typeof privateSymbol;
+
 export type APIVersion = '1' | 1;
+
+export type UIElement<T extends Record<string,any>> = {
+	[key in keyof T]: ((value: T[key]) => void) & {
+		value: () => T[key];
+	};
+} & {
+	[privateSymbol]: {
+		element: HTMLElement;
+	}
+};
+
+export function createUIElement<T extends Record<string,any>>(gs:{
+	[key in keyof T]: {
+		getter: () => T[key];
+		setter: (value:T[key]) => void;
+	}
+}, elm:HTMLElement):UIElement<T> {
+	const out = {
+	} as UIElement<T>;
+
+	Object.defineProperty(out, privateSymbol, {
+		enumerable: false,
+		value: {
+			element: elm
+		}
+	})
+
+	for (const key in gs) {
+		out[key] = ((value:T[typeof key]) => {
+			(gs[key].setter as any)(value);
+			return out;
+		}) as any;
+		out[key].value = gs[key].getter;
+	}
+
+	return out;
+}
+
+export function createButton() {
+	const button = document.createElement('button');
+	
+	return createUIElement<{
+		text: string;
+		onclick: (() => void) | null;
+		disabled: boolean;
+	}>({
+		text: {
+			getter() {
+				return button.textContent!;
+			},
+			setter(value) {
+				button.textContent = value;
+			}
+		},
+		onclick: {
+			getter() {
+				return button.onclick as () => void;
+			},
+			setter(value) {
+				button.onclick = () => {
+					if (value) {
+						value()
+					}
+				};
+			}
+		},
+		disabled: {
+			getter() {
+				return button.disabled;
+			},
+			setter(value) {
+				button.disabled = value;
+			}
+		}
+	}, button);
+}
 
 export type PluginAPIV1 = {
 	reflection: {
@@ -14,6 +93,7 @@ export type PluginAPIV1 = {
 	};
 	log: {
 		log(message:string, indent?:number):void;
+		obj(obj:any, indent?:number):void;
 	};
 	dialog: {
 		alert(message:string):Promise<void>;
@@ -23,7 +103,14 @@ export type PluginAPIV1 = {
 			defaultValue?: string;
 			placeholder?: string;
 		}):Promise<string>;
-	}
+	};
+	ui: {
+		button(): UIElement<{
+			text: string;
+			onclick: (() => void) | null;
+			disabled: boolean;
+		}>;
+	};
 }
 
 export class Plugin {
@@ -65,6 +152,9 @@ export class Plugin {
 				log: {
 					log(message:string, indent=0) {
 						console.log(`\t`.repeat(indent) + `[plugin/${self.meta.identifier.split('.').reverse()[0]}]: ${message}`);
+					},
+					obj(obj:any, indent=0) {
+						console.log(`\t`.repeat(indent) + `[plugin/${self.meta.identifier.split('.').reverse()[0]}]:`, obj);
 					}
 				},
 				dialog: {
@@ -84,6 +174,9 @@ export class Plugin {
 							defaultValue,
 						});
 					}
+				},
+				ui: {
+					button: createButton
 				}
 			} satisfies PluginAPIV1;
 		}
