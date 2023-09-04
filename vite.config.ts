@@ -34,6 +34,7 @@ export default {
 			input: {
 				main: join(__dirname, 'index.html'),
 				level: join(__dirname, 'level/index.html'),
+				plugin: join(__dirname, 'plugin/index.html'),
 			},
 		},
 	},
