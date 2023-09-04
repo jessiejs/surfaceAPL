@@ -27,11 +27,11 @@ window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
 
 (async () => {
-	if (window.location.pathname == '/level') {
+	if (window.location.pathname.toLowerCase().includes('level')) {
 		await loadLevelURL();
 		return;
 	}
-	if (window.location.pathname == '/plugin') {
+	if (window.location.pathname.toLowerCase().includes('plugin')) {
 		await showInstallPluginUI();
 		return;
 	}
