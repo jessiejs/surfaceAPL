@@ -26,14 +26,14 @@ import { PluginTable, SettingsData } from './Editor/Plugins/data';
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
 
-if (window.location.pathname == '/level') {
-	await loadLevelURL();
-}
-if (window.location.pathname == '/plugin') {
-	await showInstallPluginUI();
-}
-
 (async () => {
+	if (window.location.pathname == '/level') {
+		await loadLevelURL();
+	}
+	if (window.location.pathname == '/plugin') {
+		await showInstallPluginUI();
+	}
+
 	// compact mode
 	settings.bind<"comfy" | "compact">('ui.scale', value => {
 		if (value == 'compact') {
