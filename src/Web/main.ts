@@ -18,12 +18,19 @@ import prompt from './IO/prompt';
 import select from './IO/select';
 import { SettingsKey, defaults, getSettings, settings } from './Settings/settings';
 import { setupFlow } from './flow';
+import './Editor/Plugins/Lockbox/LockedFunction';
+import { showInstallPluginUI } from './Editor/Plugins/installUI';
+import { Plugin } from './Editor/Plugins/Plugin';
+import { PluginTable, SettingsData } from './Editor/Plugins/data';
 
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
 
 if (window.location.pathname == '/level') {
-	loadLevelURL();
+	await loadLevelURL();
+}
+if (window.location.pathname == '/plugin') {
+	await showInstallPluginUI();
 }
 
 (async () => {
@@ -56,6 +63,24 @@ if (window.location.pathname == '/level') {
 			}
 		}
 	}
+
+	// Load up plugins
+	const plugins = settings.getTable<PluginTable>('plugins');
+
+	console.group(`[plugins]: loading plugins`);
+
+	for (const plugin in plugins) {
+		console.log(`[plugins]: loading ${plugin}`);
+		const fs = new SettingsData(plugin);
+
+		const meta = await (await fs.readFile('meta.json')).json();
+
+		const src = await (await fs.readFile(meta.script)).text();
+
+		new Plugin(src, meta);
+	}
+
+	console.groupEnd();
 
 	//await new Promise(resolve => window.onclick = resolve);
 
@@ -97,6 +122,10 @@ if (window.location.pathname == '/level') {
 
 	if (settings.getString('recovery.level') != '') {
 		customButtons.push(`🛠 Edit last level`);
+	}
+
+	if (window.location.href.includes('localhost')) {
+		customButtons.push(`🎮 Plugin Install Test`);
 	}
 
 	let isSettingsDirty = false;
@@ -162,6 +191,13 @@ if (window.location.pathname == '/level') {
 			}
 		}
 		window.location.reload();
+	}
+
+	if (type == '🎮 Plugin Install Test') {
+		const url = new URL(window.location.href);
+		url.pathname = '/plugin';
+		url.search = 'plugin=/Plugins/Demo';
+		window.location.href = url.toString();
 	}
 
 	if (type == 'New') {

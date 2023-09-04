@@ -1,0 +1,12 @@
+{
+	"name": "Testing Plugin",
+	"description": "This is a plugin designed for testing, now you may be saying some long lorem ipsum text, and that's kinda what im trying to do right now, to test out the ui, ahahahahaha",
+	"version": "1.0.0",
+	"author": "surfaceAPL",
+	"license": "OSS",
+	"script": "index.js",
+	"icon": "icon.svg",
+	"accentColor": "#ff00ff",
+	"identifier": "dev.deno.surfaceapl.demo",
+	"resources": []
+}

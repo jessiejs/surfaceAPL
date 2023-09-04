@@ -4,9 +4,11 @@ export type SettingsData = {
 	kv: Record<SettingsKey, SettingsValue>;
 };
 
-export type SettingsValue = number | string | boolean;
+export type SettingsValue = number | string | boolean | {
+	[key: string]: SettingsValue;
+} | SettingsValue[];
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}` | 'pro.enabled' | 'ui.scale' | 'loca.docs' | 'recovery.level';
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}` | 'pro.enabled' | 'ui.scale' | 'loca.docs' | 'recovery.level' | 'plugins';
 export type FlagName = 'WALL_EDITING' | 'PROPERTY_VISUAL_EDITOR' | 'ANIMATED_FLAGS' | 'STAR_TOOL';
 
 export const defaults: Record<SettingsKey, SettingsValue> = {
@@ -27,7 +29,8 @@ export const defaults: Record<SettingsKey, SettingsValue> = {
 	'pro.enabled': false,
 	"ui.scale": 'comfy',
 	'loca.docs': '📚 Wiki',
-	'recovery.level': ''
+	'recovery.level': '',
+	'plugins': {}
 };
 
 type Immutable<T> = {
@@ -39,6 +42,7 @@ export type SettingsManager = {
 	getNumber<T extends number>(key: SettingsKey): T;
 	getString<T extends string>(key: SettingsKey): T;
 	getBoolean<T extends boolean>(key: SettingsKey): T;
+	getTable<T extends {[key:string]:SettingsValue}>(key: SettingsKey): T;
 	bind<T extends SettingsValue>(key: SettingsKey, handler: (value: T, key: SettingsKey) => void): void;
 };
 
@@ -78,6 +82,7 @@ export function getSettings(): SettingsManager {
 
 	return {
 		setPref(key, value) {
+			settingsHandlers[key] = settingsHandlers[key] || [];
 			data.kv[key] = value;
 			console.log(`[settings]: saving ${value} to ${key}`);
 			localStorage.setItem('settings', JSON.stringify(data));
@@ -106,7 +111,15 @@ export function getSettings(): SettingsManager {
 			}
 			return value as T;
 		},
+		getTable<T extends {[key:string]:SettingsValue}>(key: SettingsKey) {
+			const value = getPref(key);
+			if (typeof value != 'object') {
+				throw `[settings]: ${key} is not an object`;
+			}
+			return value as T;
+		},
 		bind<T>(key: SettingsKey, handler: (value: T, key: SettingsKey) => void) {
+			settingsHandlers[key] = settingsHandlers[key] || [];
 			settingsHandlers[key].push(handler as any);
 			handler(data.kv[key] as T, key);
 		}
@@ -290,3 +303,6 @@ export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 	content.getBoundingClientRect(); // force style recalc
 	content.classList.add('content');
 }
+
+//@ts-ignore
+window.settings = settings;
