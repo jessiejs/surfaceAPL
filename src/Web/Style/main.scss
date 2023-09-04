@@ -7,7 +7,8 @@ body {
 	--gap-large: 15px;
 	--settings-row-height: 50px;
 
-	transition: --gap-small 0.2s, --gap-medium 0.2s, --gap-large 0.2s, --settings-row-height 0.2s;
+	transition: --gap-small 0.2s, --gap-medium 0.2s, --gap-large 0.2s,
+		--settings-row-height 0.2s;
 }
 
 body.compact {
@@ -25,6 +26,20 @@ body.compact {
 	@include WidgetButtonHover;
 }
 
+@mixin Glass {
+	border-radius: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	background: rgba(0, 0, 0, 0.15);
+	box-shadow: 0px 0px 4px 0px rgba(255, 255, 255, 0.25) inset,
+		0px 0px 2px 0px rgba(0, 0, 0, 0.5) inset,
+		0px 0px 2px 0px rgba(0, 0, 0, 0.5) inset;
+	backdrop-filter: blur(50px);
+
+	&>.content>label>button {
+		background-color: rgba(0, 0, 0, 0.2);
+	}
+}
+
 @mixin WidgetButton {
 	border-radius: 5px;
 	:not(.selected-button):not(img) {
@@ -32,10 +47,8 @@ body.compact {
 	}
 	border: 0 !important;
 
-	transition:
-		background-color 0.2s,
-		transform 0.2s cubic-bezier(0.68, -0.6, 0.32, 1.6),
-		width 0.2s,
+	transition: background-color 0.2s,
+		transform 0.2s cubic-bezier(0.68, -0.6, 0.32, 1.6), width 0.2s,
 		height 0.2s;
 
 	display: flex;
@@ -297,7 +310,8 @@ label {
 	width: 100%;
 }
 
-input, select {
+input,
+select {
 	font-size: 14px;
 	padding: 6px 12px;
 	border-radius: 5px;
@@ -332,10 +346,11 @@ textarea {
 	user-select: none;
 	font-size: 15px;
 
-	> input, select {
+	> input,
+	select {
 		max-width: 150px;
 	}
-	> input[type=checkbox] {
+	> input[type='checkbox'] {
 		width: min-content;
 	}
 	height: var(--settings-row-height);
@@ -479,10 +494,13 @@ dialog:not(.custom-dialog):has(.confetti) {
 	border-radius: 5px;
 	background-color: $bg-3;
 	border: 1px solid $raisedBorder;
-	box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
 	overflow: hidden;
 
-	transition: right 0.5s cubic-bezier(0.25, 1, 0.5, 1), transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+	@include Glass();
+
+	transition: right 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+		transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 
 	padding: var(--gap-large);
 	display: flex;
@@ -570,7 +588,7 @@ dialog:not(.custom-dialog):has(.confetti) {
 		flex-grow: 1;
 	}
 
-	&>main {
+	& > main {
 		padding: 50px;
 		font-family: 'Inter';
 
@@ -578,15 +596,16 @@ dialog:not(.custom-dialog):has(.confetti) {
 		flex-direction: column;
 		gap: 10px;
 
-		&>h1, &>p {
+		& > h1,
+		& > p {
 			margin: 0;
 		}
 
-		&>.spacer {
+		& > .spacer {
 			flex-grow: 1;
 		}
 
-		&>.buttons {
+		& > .buttons {
 			display: flex;
 			flex-direction: row;
 			gap: 5px;
@@ -594,7 +613,7 @@ dialog:not(.custom-dialog):has(.confetti) {
 			justify-content: flex-end;
 			padding: 0;
 
-			&>button {
+			& > button {
 				padding: 10px 20px;
 				margin: 0;
 				width: min-content;
@@ -607,7 +626,7 @@ dialog:not(.custom-dialog):has(.confetti) {
 		}
 	}
 
-	&>.image {
+	& > .image {
 		background-color: var(--accent);
 
 		display: flex;
@@ -619,7 +638,7 @@ dialog:not(.custom-dialog):has(.confetti) {
 
 		border-radius: 10px;
 
-		&>img {
+		& > img {
 			width: 25%;
 			user-select: none;
 			&.spinning {
@@ -633,7 +652,7 @@ dialog:not(.custom-dialog):has(.confetti) {
 		backdrop-filter: blur(50px);
 	}
 
-	box-shadow: 0 15px 20px rgba(0,0,0,0.2);
+	box-shadow: 0 15px 20px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes spin {
