@@ -39,7 +39,7 @@ body.compact {
 	border: 0.5px solid rgba(0, 0, 0, 0.25);
 	background: rgba(0, 0, 0, 0.15);
 	box-shadow: 0px 0px 2px 0px rgba(255, 255, 255, 0.25) inset, 0px 0px 2px 0px rgba(255, 255, 255, 0.25) inset, 0px 0px 2px 0px rgba(255, 255, 255, 0.25) inset, 0px 0px 1px 0px rgba(0, 0, 0, 0.25) inset, 0px 0px 1px 0px rgba(0, 0, 0, 0.25) inset, 0px 0px 1px 0px rgba(0, 0, 0, 0.25) inset, 0px 0px 1px 0px rgba(0, 0, 0, 0.25) inset, 0px 0px 1px 0px rgba(0, 0, 0, 0.25) inset;
-	backdrop-filter: blur(25px);
+	backdrop-filter: blur(50px);
 
 	&>.content>label>button {
 		background-color: rgba(0, 0, 0, 0.2);
