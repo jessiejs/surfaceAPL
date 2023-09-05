@@ -1,4 +1,4 @@
-import { waitFrame } from '../Promises/wait';
+import { wait, waitFrame } from '../Promises/wait';
 import {
 	Level,
 	Tile,
@@ -272,7 +272,7 @@ window.addEventListener('keyup', keyUp);
 
 	const level = loadLevel(openCodeToMainLevelCode(levelCode!));
 
-	const editor = createEditor(level);
+	let editor = createEditor(level);
 
 	let pTime = await waitFrame();
 	while (true) {
@@ -280,17 +280,15 @@ window.addEventListener('keyup', keyUp);
 		const delta = Math.min((time - pTime) / 1000, 1 / 20);
 		pTime = time;
 		try {
-			const p = new Promise((resolve)=>{
+			const p = new Promise((resolve,reject)=>{
 				let r = false;
 				editor.tick(delta).then(()=>{
 					resolve(null);
 					r = true;
 				});
 				setTimeout(()=>{
-					if (!r) {
-						showErrorScreen(document.querySelector('canvas')!.getContext('2d')!,`It looks like the editor ran into an unending halt, we're so sorry! 😅`);
-					}
-				}, 7000);
+					reject(`It looks like the editor ran into an unending halt, we're so sorry! 😅`);
+				},7000);
 			});
 			await p;
 		} catch (e: any) {
@@ -305,7 +303,11 @@ window.addEventListener('keyup', keyUp);
 				text += `\n\nTrace:\n${error.stack}\n`;
 			}
 			showErrorScreen(document.querySelector('canvas')!.getContext('2d')!,text);
-			throw e;
+			await wait(5000);
+			document.querySelector('canvas')!.style.zIndex = '0';
+			document.querySelector('canvas')!.style.position = 'initial';
+			editor.destroy();
+			editor = createEditor(level);
 		}
 	}
 

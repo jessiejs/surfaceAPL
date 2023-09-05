@@ -294,9 +294,7 @@ export function createSidebar(
 
 	return {
 		destroy() {
-			for (const child of sidebar.children) {
-				child.remove();
-			}
+			sidebar.innerHTML = '';
 			keyDownHandlers.pop();
 		},
 	};
