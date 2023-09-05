@@ -142,6 +142,19 @@ export function createEditor(level: Level): Editor {
 	canvas.addEventListener('mouseup', () => {
 		isMouseDown = false;
 	});
+	window.addEventListener('wheel', (ev) => {
+		if (ev.deltaY < 0) {
+			coreCamera.zoom *= 1.3;
+			if (coreCamera.zoom > 3) {
+				coreCamera.zoom = 3;
+			}
+		} else {
+			coreCamera.zoom /= 1.3;
+			if (coreCamera.zoom < 0.1) {
+				coreCamera.zoom = 0.1;
+			}
+		}
+	});
 	keyDownHandlers.at(-1)!.push(keyDownEventHandler);
 	keyUpHandlers.at(-1)!.push(keyUpEventHandler);
 
