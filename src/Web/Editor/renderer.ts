@@ -46,6 +46,10 @@ const textureOffsets = {
 	'/textures/icons/burtha.svg': [0.5,-0.5]
 };
 
+//TODO: SEE BELOW
+// FIXME: This, is quite possibly the worst sin i've ever committed
+//        this code is so shit, it makes me want to cry
+//        fixing this function would fix world hunger, death, and most of all, my sanity
 export function drawTile({
 	ctx,
 	src,
