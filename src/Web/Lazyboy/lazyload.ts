@@ -28,7 +28,7 @@ export function lazyload() {
 			};
 		}
 
-		if (loaded.includes(src)) {
+		if (store[src]?.complete) {
 			return store[src];
 		}
 

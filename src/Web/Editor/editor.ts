@@ -12,7 +12,7 @@ import {
 } from './coordinates';
 import { createDebugger } from './debugger';
 import { lazyload } from '../Lazyboy/lazyload';
-import { drawTile, frameInfo } from './renderer';
+import { TileRenderData, drawTile, frameInfo, getRenderData, renderTile } from './renderer';
 import {
 	Level,
 	encodeLevel,
@@ -342,51 +342,77 @@ export function createEditor(level: Level): Editor {
 			}
 
 			// draw all textures
-			for (let i = 0; i < level.tiles.length; i++) {
-				if (level.tiles[i].id >= 2 && dualRendering)
-					drawTile({
-						cam: smoothCamera,
-						src: `/Textures/BG/${IdToString[
-							level.tiles[i].id
-						].toLowerCase()}.svg`,
-						pos: indexToStandardCoords(
-							i,
-							level.width,
-							level.height
-						),
-						rotationInAppelDegrees: level.tiles[i].rotation,
-						ctx,
-						lazyload: img,
-						hue: level.hue2,
-						id: level.tiles[i].id,
-						drawImg: true,
-						time
-					});
-			}
+			//for (let i = 0; i < level.tiles.length; i++) {
+			//	if (level.tiles[i].id >= 2 && dualRendering)
+			//		drawTile({
+			//			cam: smoothCamera,
+			//			src: `/Textures/BG/${IdToString[
+			//				level.tiles[i].id
+			//			].toLowerCase()}.svg`,
+			//			pos: indexToStandardCoords(
+			//				i,
+			//				level.width,
+			//				level.height
+			//			),
+			//			rotationInAppelDegrees: level.tiles[i].rotation,
+			//			ctx,
+			//			lazyload: img,
+			//			hue: level.hue2,
+			//			id: level.tiles[i].id,
+			//			drawImg: true,
+			//			time
+			//		});
+			//}
+
+			//for (let i = 0; i < level.tiles.length; i++) {
+			//	if (level.tiles[i].id >= 2)
+			//		drawTile({
+			//			cam: smoothCamera,
+			//			src: `/Textures/${
+			//				dualRendering ? 'FG' : 'Icons'
+			//			}/${IdToString[level.tiles[i].id].toLowerCase()}.svg`,
+			//			pos: indexToStandardCoords(
+			//				i,
+			//				level.width,
+			//				level.height
+			//			),
+			//			rotationInAppelDegrees: level.tiles[i].rotation,
+			//			ctx,
+			//			lazyload: img,
+			//			hue: level.hue,
+			//			id: level.tiles[i].id,
+			//			superPain: disableHueRendering,
+			//			drawImg: true,
+			//			time
+			//		});
+			//}
+
+			// New rendering code using non-deprecated API's
+			const renderData:TileRenderData[] = new Array(level.tiles.length);
 
 			for (let i = 0; i < level.tiles.length; i++) {
-				if (level.tiles[i].id >= 2)
-					drawTile({
-						cam: smoothCamera,
-						src: `/Textures/${
-							dualRendering ? 'FG' : 'Icons'
-						}/${IdToString[level.tiles[i].id].toLowerCase()}.svg`,
-						pos: indexToStandardCoords(
-							i,
-							level.width,
-							level.height
-						),
-						rotationInAppelDegrees: level.tiles[i].rotation,
-						ctx,
-						lazyload: img,
-						hue: level.hue,
-						id: level.tiles[i].id,
-						superPain: disableHueRendering,
-						drawImg: true,
-						time
-					});
+				renderData[i] = getRenderData({
+					cam: smoothCamera,
+					time,
+					lazyloader: img,
+					index: i,
+					level,
+					canvasWidth: canvas.width,
+					canvasHeight: canvas.height
+				})
 			}
 
+			// Draw the background layer
+			for (let i = 0; i < level.tiles.length; i++) {
+				renderTile("background", renderData[i], ctx);
+			}
+
+			// Draw the foreground layer
+			for (let i = 0; i < level.tiles.length; i++) {
+				renderTile("foreground", renderData[i], ctx);
+			}
+
+			// draw the stencil
 			const stencilImg = img(`/Textures/Player/Stencil.png`);
 
 			ctx.globalAlpha = 0.2;

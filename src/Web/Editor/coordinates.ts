@@ -10,7 +10,7 @@ import { Camera } from './editor';
 export function transformWorldCoordinatesToCameraCoordinates(
 	pPos: [number, number],
 	camera: Camera
-) {
+):[number, number] {
 	// Destructure the pPos array into worldX and worldY variables
 	const [worldX, worldY] = pPos;
 
