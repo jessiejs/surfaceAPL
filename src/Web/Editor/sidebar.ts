@@ -89,7 +89,7 @@ export function createSidebar(
 			const openCode = mainLevelCodeToOpenCode(internalCode);
 
 			copy('Download your level', openCode);
-		} else if (event.code == 'KeyP') {
+		} else if (event.code == 'KeyP' && false) {
 			// replace all the flags with air
 			for (const tile of level.tiles) {
 				if (tile.id == TileType.Checkpoint9) {
