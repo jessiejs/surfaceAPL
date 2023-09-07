@@ -22,9 +22,12 @@ import './Editor/Plugins/Lockbox/LockedFunction';
 import { showInstallPluginUI } from './Editor/Plugins/installUI';
 import { Plugin } from './Editor/Plugins/Plugin';
 import { PluginTable, SettingsData } from './Editor/Plugins/data';
+import { Jukebox } from './Jukebox/jukebox';
 
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
+
+new Jukebox();
 
 (async () => {
 	if (window.location.pathname.toLowerCase().includes('level')) {
