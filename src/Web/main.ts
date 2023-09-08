@@ -27,7 +27,7 @@ import { Jukebox } from './Jukebox/jukebox';
 window.addEventListener('keydown', keyDown);
 window.addEventListener('keyup', keyUp);
 
-new Jukebox();
+//new Jukebox();
 
 (async () => {
 	if (window.location.pathname.toLowerCase().includes('level')) {

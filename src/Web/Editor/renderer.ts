@@ -48,172 +48,6 @@ const textureOffsets = {
 	'/textures/icons/burtha.svg': [0.5,-0.5]
 };
 
-//TODO: SEE BELOW
-// FIXME: This, is quite possibly the worst sin i've ever committed
-//        this code is so shit, it makes me want to cry
-//        fixing this function would fix world hunger, death, and most of all, my sanity
-/**
- * @deprecated
-*/
-export function drawTile({
-	ctx,
-	src,
-	pos,
-	cam,
-	lazyload,
-	rotationInAppelDegrees,
-	hue,
-	id,
-	superPain,
-	data,
-	drawImg,
-	time
-}: {
-	ctx: CanvasRenderingContext2D;
-	src: string;
-	pos: [number, number];
-	cam: Camera;
-	lazyload: (src: string) => HTMLImageElement | undefined;
-	rotationInAppelDegrees: number;
-	hue: number;
-	id: number;
-	superPain?: boolean;
-	data?: string;
-	drawImg: boolean;
-	time: number
-}) {
-	let img = lazyload(src);
-
-	if (settings.getBoolean('ff.ANIMATED_FLAGS')) {
-		if (id == TileType.Checkpoint2 || id == TileType.End1) {
-			let newId = id;
-			newId += Math.abs((Math.floor(time * 5) % 8) - 3); // ew, but it's technically correct
-			img = lazyload(`/Textures/BG/${IdToString[newId].toLowerCase()}.svg`);
-		}
-	}
-
-	if (img) {
-		const realRotation = (rotationInAppelDegrees - 1) * 90;
-
-		const multipliedPos: [number, number] = [
-			pos[0] * 62 + 31,
-			pos[1] * 62 + 31,
-		];
-
-		const imgSize = [img.width, img.height];
-
-		const screenSpacePos = [
-			transformWorldCoordinatesToCameraCoordinates(multipliedPos, cam)[0],
-			transformWorldCoordinatesToCameraCoordinates(multipliedPos, cam)[1],
-		];
-
-		const screenSpaceSize = [
-			(imgSize[0] * cam.zoom * 62) / 60,
-			(imgSize[1] * cam.zoom * 62) / 60,
-		];
-
-		if (
-			screenSpacePos[0] + screenSpaceSize[0] / 2 < 0 ||
-			screenSpacePos[1] + screenSpaceSize[1] / 2 < 0 ||
-			screenSpacePos[0] - screenSpaceSize[0] / 2 > cam.resolution[0] ||
-			screenSpacePos[1] - screenSpaceSize[1] / 2 > cam.resolution[1]
-		) {
-			return;
-		}
-
-		const radians = (realRotation * Math.PI) / 180;
-
-		if (mask[id - 1].doHue) {
-			// hue shift
-			ctx.filter = `hue-rotate(${Math.round((hue / 200) * 360)}deg)`;
-		} else {
-			ctx.filter = 'none';
-		}
-
-		if (superPain) ctx.filter = 'none';
-
-		const offset = (
-			textureOffsets as unknown as Record<
-				string,
-				[number, number] | undefined
-			>
-		)[src.toLowerCase()] ?? [0, 0];
-
-		if (drawImg) {
-			ctx.save();
-			ctx.translate(screenSpacePos[0], screenSpacePos[1]);
-			ctx.rotate(radians);
-			ctx.drawImage(
-				img,
-				-screenSpaceSize[0] / 2 + offset[0] * 62 * cam.zoom,
-				-screenSpaceSize[1] / 2 + offset[1] * 62 * cam.zoom,
-				screenSpaceSize[0],
-				screenSpaceSize[1]
-			);
-			ctx.restore();
-		}
-
-		frameInfo.visibleTiles++;
-
-		ctx.filter = 'none';
-
-		if (data) {
-			const text = `${data}`;
-			// draw a small little info bubble above the tile
-			const doRounding = false;
-			const size = (doRounding ? Math.round : ($: number) => $)(
-				12 * cam.zoom
-			); // it gets rounded anyways, so its better to explicitly do it so we at least lay out correctly
-			ctx.font = 'bold ' + size + 'px monospace';
-			const textWidth = ctx.measureText(text).width;
-			const upDownPadding = 12 * cam.zoom;
-			const leftRightPadding = 14 * cam.zoom;
-			const bubbleWidth = textWidth + leftRightPadding;
-			const bubbleHeight = size + upDownPadding;
-			const cornerRadius = 5 * cam.zoom;
-			const bubbleCenterX = screenSpacePos[0];
-			const bubbleCenterY =
-				screenSpacePos[1] -
-				screenSpaceSize[1] / 2 -
-				bubbleHeight / 2 -
-				10 * cam.zoom;
-
-			ctx.fillStyle = 'white';
-			ctx.beginPath();
-			ctx.roundRect(
-				bubbleCenterX - bubbleWidth / 2,
-				bubbleCenterY - bubbleHeight / 2,
-				bubbleWidth,
-				bubbleHeight,
-				cornerRadius
-			);
-			ctx.fill();
-
-			// draw a tiny arrow below the bubble
-			const arrowUnits = 5 * cam.zoom;
-			ctx.beginPath();
-			ctx.moveTo(
-				bubbleCenterX - arrowUnits,
-				bubbleCenterY + bubbleHeight / 2
-			);
-			ctx.lineTo(
-				bubbleCenterX + arrowUnits,
-				bubbleCenterY + bubbleHeight / 2
-			);
-			ctx.lineTo(
-				bubbleCenterX,
-				bubbleCenterY + bubbleHeight / 2 + arrowUnits
-			);
-			ctx.fill();
-
-			ctx.fillStyle = 'black';
-			ctx.textAlign = 'center';
-			ctx.textBaseline = 'middle';
-			ctx.fillText(text, bubbleCenterX, bubbleCenterY);
-		}
-	}
-}
-
 export type TileRenderData = undefined | {
 	center: [number, number];
 	size: [number, number];
@@ -223,7 +57,8 @@ export type TileRenderData = undefined | {
 	backgroundImage: HTMLImageElement;
 	foregroundImageSize: [number, number];
 	backgroundImageSize: [number, number];
-	renderingDebugText: string | undefined
+	renderingDebugText: string | undefined;
+	zoom: number;
 };
 
 export function isTileAnimated(tile:Tile) {
@@ -263,7 +98,7 @@ export function getRenderData({
 	let foregroundSrc = '';
 	let backgroundSrc = '';
 
-	if (isTileAnimated(tile)) {
+	if (isTileAnimated(tile) && settings.getBoolean('ff.ANIMATED_FLAGS')) {
 		// 1.A: Animated, pick a new id
 		let id = tile.id;
 		id += Math.abs((Math.floor(time * 5) % 8) - 3); // Stolen straight from Appel :D
@@ -345,7 +180,8 @@ export function getRenderData({
 		backgroundImage,
 		foregroundImageSize: foregroundImageSizeCamera,
 		backgroundImageSize: backgroundImageSizeCamera,
-		renderingDebugText
+		renderingDebugText,
+		zoom: cam.zoom
 	}
 }
 
@@ -382,18 +218,21 @@ export function renderBubble(text:string, renderData: TileRenderData, ctx: Canva
 	if (!renderData) return;
 
 	// Step 2: Calculate tip of the arrow
+	let scale = renderData.zoom;
+	scale += (1 - scale) * 0.2;
+
+	const arrowSize = 10 * scale;
 	const arrowTip = [
 		renderData.center[0],
-		renderData.center[1] - renderData.size[1] / 2 - 10
+		renderData.center[1] - renderData.size[1] / 2 - arrowSize / 2
 	];
 
 	// Step 3: Calculate sizings
 	// Config
-	const textSize = 12;
-	const textPaddingHoriz = 14;
-	const textPaddingVert = 12;
+	const textSize = 18 * scale;
+	const textPaddingHoriz = 14 * scale;
+	const textPaddingVert = 12 * scale;
 	const cornerRadius = 4;
-	const arrowSize = 20;
 
 	// Calculations
 	ctx.font = `${textSize}px JetBrains Mono`;
@@ -406,10 +245,20 @@ export function renderBubble(text:string, renderData: TileRenderData, ctx: Canva
 	const arrowLeft = arrowTip[0] - arrowSize;
 	const arrowRight = arrowTip[0] + arrowSize;
 	const arrowBottom = arrowTip[1];
-	const arrowTop = arrowTip[1] + arrowSize;
+	const arrowTop = arrowTip[1] - arrowSize;
 
 	// Step 4: Draw
 	// 4.A: Rectangle
+	let visibility = 1;
+
+	// Decrease visibility as we zoom out
+	visibility += (renderData.zoom - 1.2) * 1.5;
+
+	visibility = Math.max(0, Math.min(1, visibility));
+
+	ctx.globalAlpha = visibility;
+	ctx.filter = `blur(${(1 - visibility) * 10}px)`;
+
 	ctx.fillStyle = 'black'; // Dark mode 😎
 
 	ctx.beginPath();
@@ -435,4 +284,8 @@ export function renderBubble(text:string, renderData: TileRenderData, ctx: Canva
 	ctx.textBaseline = 'middle';
 
 	ctx.fillText(text, bubbleCenterX, bubbleCenterY);
+
+	// 4.D: Reset style
+	ctx.filter = 'none';
+	ctx.globalAlpha = 1;
 }

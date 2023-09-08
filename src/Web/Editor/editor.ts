@@ -12,7 +12,7 @@ import {
 } from './coordinates';
 import { createDebugger } from './debugger';
 import { lazyload } from '../Lazyboy/lazyload';
-import { TileRenderData, drawTile, frameInfo, getRenderData, renderTile } from './renderer';
+import { TileRenderData, frameInfo, getRenderData, renderBubble, renderTile } from './renderer';
 import {
 	Level,
 	encodeLevel,
@@ -435,28 +435,11 @@ export function createEditor(level: Level): Editor {
 
 			ctx.globalAlpha = 1;
 
+			// Draw the bubble layer
 			for (let i = 0; i < level.tiles.length; i++) {
-				if (level.tiles[i].id >= 2)
-					drawTile({
-						cam: smoothCamera,
-						src: `/Textures/${
-							dualRendering ? 'FG' : 'Icons'
-						}/${IdToString[level.tiles[i].id].toLowerCase()}.svg`,
-						pos: indexToStandardCoords(
-							i,
-							level.width,
-							level.height
-						),
-						rotationInAppelDegrees: level.tiles[i].rotation,
-						ctx,
-						lazyload: img,
-						hue: level.hue,
-						id: level.tiles[i].id,
-						superPain: disableHueRendering,
-						data: level.tiles[i].data,
-						drawImg: false,
-						time
-					}); //TODO: FIXME, we shouldn't use drawTile for drawing the data bubble, that's just fucking stupid
+				if (level.tiles[i].data.trim() != '') {
+					renderBubble(level.tiles[i].data, renderData[i], ctx);
+				}
 			}
 
 			// update the selection
@@ -689,10 +672,10 @@ export function createEditor(level: Level): Editor {
 				dbg(`Dual-rendering is disabled`);
 			}
 
-			if (behaviour.editStyle.startsWith("property.") && data != '') {
-				dbg.title(`Property Picker`);
-				dbg(`Data: ${data}`);
-			}
+			//if (behaviour.editStyle.startsWith("property.") && data != '') {
+			//	dbg.title(`Property Picker`);
+			//	dbg(`Data: ${data}`);
+			//}
 
 			const superpainTileLimit = 100;
 
