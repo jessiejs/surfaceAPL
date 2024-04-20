@@ -656,6 +656,8 @@ export function createEditor(level: Level): Editor {
 				.toLowerCase()
 				.includes('chrome');
 
+			disableHueRendering = false;
+
 			if (disableHueRendering) {
 				dbg.removeGap();
 				dbg(

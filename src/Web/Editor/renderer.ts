@@ -59,6 +59,7 @@ export type TileRenderData = undefined | {
 	backgroundImageSize: [number, number];
 	renderingDebugText: string | undefined;
 	zoom: number;
+	hue: number;
 };
 
 export function isTileAnimated(tile:Tile) {
@@ -181,11 +182,12 @@ export function getRenderData({
 		foregroundImageSize: foregroundImageSizeCamera,
 		backgroundImageSize: backgroundImageSizeCamera,
 		renderingDebugText,
-		zoom: cam.zoom
+		zoom: cam.zoom,
+		hue: level.hue
 	}
 }
 
-export function renderTile(pass:"background" | "foreground", renderData: TileRenderData, ctx: CanvasRenderingContext2D) {
+export function renderTile(pass:"background" | "foreground", renderData: TileRenderData, ctx: CanvasRenderingContext2D, {renderHue}={renderHue:true}) {
 	// Step 1: Check if we need to render
 	if (!renderData) return;
 
@@ -201,7 +203,23 @@ export function renderTile(pass:"background" | "foreground", renderData: TileRen
 	];
 
 	// Step 4: Draw
+	if (renderData.hue != 0 && renderHue) {
+		ctx.filter = `hue-rotate(${renderData.hue / 200 * 360}deg)`;
+	}
+
+	// Old code (no rotations)
+	// ctx.drawImage(image, topLeftCorner[0], topLeftCorner[1], size[0], size[1]);
+
+	// New code (rotations)
+	ctx.translate(center[0], center[1]);
+	ctx.rotate(renderData.rotationRadians);
+	ctx.translate(-center[0], -center[1]);
 	ctx.drawImage(image, topLeftCorner[0], topLeftCorner[1], size[0], size[1]);
+	ctx.resetTransform();
+
+	if (renderData.hue != 0 && renderHue) {
+		ctx.filter = 'none';
+	}
 
 	// Step 5: Debug
 	if (pass === "foreground" && renderData.renderingDebugText) {

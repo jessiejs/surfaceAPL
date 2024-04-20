@@ -80,7 +80,9 @@ export function createStarfloat(level:Level) {
 	function setHue(value:number) {
 		hue = value;
 		accent(`hsl(${hue}deg, 100%, 50%)`);
-		level.hue = (level.hue - 128) / 360 * 200;
+		level.hue = (value - 128) / 360 * 200;
+
+		console.log(`${value} hue = ${level.hue} appel hue`)
 	}
 
 	const hueStripLabel = document.createElement('label');
@@ -93,6 +95,7 @@ export function createStarfloat(level:Level) {
 		const button = document.createElement('button');
 		button.style.backgroundColor = `hsla(${i}deg, 100%, 50%, 0.2)`;
 		button.addEventListener('click', () => {setHue(i);click()});
+		button.title = i.toString();
 		hueStrip.appendChild(button);
 	}
 
@@ -183,6 +186,13 @@ export function createStarfloat(level:Level) {
 						index++;
 					}
 				}
+			}
+		}, {
+			title: 'Use Default Hue',
+			action: async () => {
+				level.hue = 0;
+				hue = (level.hue / 200 * 360) + 128;
+				accent(`hsl(${hue}deg, 100%, 50%)`);
 			}
 		}
 	];

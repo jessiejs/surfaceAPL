@@ -100,9 +100,10 @@ export default function (
 						  ]
 						: Object.values(pColors)
 				).map(v => v.stripes.map(stripe => stripe.code));
-				const chosenColors =
-					prideColors[Math.floor(Math.random() * prideColors.length)];
-				const colors = chosenColors;
+				//const chosenColors =
+				//	prideColors[Math.floor(Math.random() * prideColors.length)];
+				const chosenColors = pColors.poly;
+				const colors = chosenColors.stripes.map(s => s.code);
 				const confettiPromise = confetti
 					.create(confettiCanvas, {
 						resize: true,
