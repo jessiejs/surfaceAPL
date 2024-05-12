@@ -9,10 +9,6 @@ export async function setupFlow() {
 	while (isAsking) {
 		await alert(`Let's help you get into your flow.`);
 
-		await alert(`Link shortening can make your QR codes smaller and your links more portable.\nThe only potential reason you wouldn\'t want to use this is that your level will be stored on the servers on gotiny.cc`);
-	
-		let allowLinkShortening = await confirm('Would you like to enable link shortening?');
-	
 		let propPickType:string | undefined = undefined;
 	
 		while (!propPickType) {
@@ -39,8 +35,7 @@ export async function setupFlow() {
 			}
 		}
 
-		if (await confirm(`Let's make sure all you're settings are how you want them\n\nLink shortening: ${allowLinkShortening ? 'On' : 'Off'}\nProperty Picker Style: ${propPickType}\n\nAre these how you want them?`)) {
-			settings.setPref('privacy.linkShortener', allowLinkShortening);
+		if (await confirm(`Let's make sure all you're settings are how you want them\n\nProperty Picker Style: ${propPickType}\n\nAre these how you want them?`)) {
 			settings.setPref('propertyPicker.style', propPickType);
 			isAsking = false;
 		}

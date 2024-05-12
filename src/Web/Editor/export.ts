@@ -11,7 +11,6 @@ import QRCode from 'qrcode';
 import GZip from 'gzip-js';
 import confirm from '../IO/confirm';
 import { settings } from '../Settings/settings';
-import { set } from 'gotiny';
 
 async function bufferToBase64(buffer: Uint8Array) {
 	// use a FileReader to generate a base64 data URI:
@@ -34,28 +33,6 @@ export async function share(level: Level) {
 
 	// build our URL
 	let url = await getURLForLevel(levelCode);
-
-	// check if we should use a link shortener
-	if (
-		settings.getBoolean('privacy.linkShortener')
-	) {
-		const result = await set(url);
-
-		if (!result[0]?.code) {
-			await alert(`It looks like we couldn't host your level.`);
-			if (window.location.href.includes('localhost')) {
-				await alert(
-					`This is probably due to the fact that you are using localhost, instead of our primary servers`
-				);
-			}
-			if (await confirm('Would you like to disable link shortening?')) {
-				settings.setPref('privacy.linkShortener', false);
-			}
-			return;
-		}
-
-		url = `https://gotiny.cc/${result[0]?.code}`;
-	}
 
 	// show a share type selector
 	let canShare = true;
@@ -96,16 +73,7 @@ export async function share(level: Level) {
 						errorCorrectionLevel: 'L',
 					});
 				} catch {
-					if (settings.getBoolean('privacy.linkShortener')) {
-						await alert(
-							`This is unusual, your hosted level, the link to which should be quite small, could not be made into a QR code, please assume that it's our fault, and tell us!!!`
-						);
-					} else {
-						await alert(`Your link could not fit into a QR code.`);
-						if (await confirm('Would you like to enable link shortening?')) {
-							settings.setPref('privacy.linkShortener', true);
-						}
-					}
+					await alert(`Your link could not fit into a QR code.`);
 				}
 
 				const img = document.createElement('img');

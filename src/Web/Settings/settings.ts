@@ -8,14 +8,13 @@ export type SettingsValue = number | string | boolean | {
 	[key: string]: SettingsValue;
 } | SettingsValue[];
 
-export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'privacy.linkShortener' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}` | 'pro.enabled' | 'ui.scale' | 'loca.docs' | 'recovery.level' | 'plugins';
+export type SettingsKey = 'propertyPicker.style' | 'camera.scaledMotion' | 'camera.speed' | 'setup.flow' | 'loca.export' | 'loca.settings' | 'loca.about' | 'settings.showDeveloperInfo' | 'flags.divergent' | `ff.${FlagName}` | 'pro.enabled' | 'ui.scale' | 'loca.docs' | 'recovery.level' | 'plugins';
 export type FlagName = 'WALL_EDITING' | 'PROPERTY_VISUAL_EDITOR' | 'ANIMATED_FLAGS' | 'STAR_TOOL';
 
 export const defaults: Record<SettingsKey, SettingsValue> = {
 	'propertyPicker.style': 'classic',
 	'camera.scaledMotion': true,
 	'camera.speed': 400,
-	'privacy.linkShortener': true,
 	'setup.flow': false,
 	'loca.about': 'About',
 	'loca.export': 'Export',
@@ -178,7 +177,6 @@ export function showSettingsWindow({ showFlags }:{ showFlags:boolean }) {
 			Compact: 'compact',
 		}],
 		['category','Privacy'],
-		['privacy.linkShortener', 'Use Link Shortener', 'tickbox'],
 		['category', 'Camera'],
 		['camera.scaledMotion', 'Magic Panning', 'tickbox'],
 		['camera.speed', 'Camera Speed', 'number'],
