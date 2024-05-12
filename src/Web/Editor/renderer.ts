@@ -45,7 +45,10 @@ const textureOffsets = {
 	'/textures/bg/lock02.svg': [-0.25, 0],
 	'/textures/icons/lock02.svg': [-0.25, 0],
 	'/textures/fg/burtha.svg': [0.5,-0.5],
-	'/textures/icons/burtha.svg': [0.5,-0.5]
+	'/textures/icons/burtha.svg': [0.5,-0.5],
+	'/textures/fg/green1000.svg': [-0.25, 0.25],
+	'/textures/bg/green1000.svg': [-0.25, 0.25],
+	'/textures/icons/green1000.svg': [-0.25, 0.25],
 };
 
 export type TileRenderData = undefined | {
