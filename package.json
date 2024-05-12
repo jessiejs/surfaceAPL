@@ -1,7 +1,7 @@
 {
 	"name": "surfaceapl",
 	"private": true,
-	"version": "8.0.0",
+	"version": "8.0.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
@@ -25,7 +25,6 @@
 		"canvas-confetti": "^1.6.0",
 		"chroma-js": "^2.4.2",
 		"disposablestack": "^1.1.1",
-		"gotiny": "^1.5.4",
 		"gzip-js": "^0.3.2",
 		"howler": "^2.2.3",
 		"p5": "^1.7.0",
