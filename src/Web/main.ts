@@ -164,7 +164,7 @@ window.addEventListener('keyup', keyUp);
 		const prefix = type.split(' - ')[0];
 		const index = Number(prefix.split(' ')[1]) - 1;
 
-		levelCode = mainLevelCodeToOpenCode(levelText.split('\n')[index]);
+		levelCode = mainLevelCodeToOpenCode(levelText.split('\n')[index + 1]);
 	}
 
 	if (type == '✨ Setup your flow') {
